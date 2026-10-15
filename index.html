@@ -1,0 +1,1560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- flow-rebuild template (Growth Audit, v3: + walkthrough video, phone view/QR, localization, paywall today vs proposed). Replace every double-brace placeholder, everything between
+     the SCREENS markers, and the CONTENT json. Rules that brand-check.py enforces are marked RULE.
+     Reference builds: eddieatadapty.github.io/datacamp-flow-rebuild-v2 · bterzic123.github.io/planner5d-flow-rebuild-v2 -->
+<title>Financial Times Growth Audit</title>
+<meta name="description" content="Five ideas to turn more Financial Times users into subscribers, each built into a clickable version of Financial Times's own onboarding. Prepared by Adapty.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- the APP's font (brand.json fonts, or the closest Google family) + a mono if the app shows code -->
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+/* BRAND:START — the only place the APP's colours are written as literals. Sampled from the FT app's own screens
+   (ScreensDesign replay) and ft.com computed styles (browser pane). Used only inside the phone. */
+:root{
+  --b-primary:#187373;       /* teal: CTA, prices, selected (in-app sample) */
+  --b-primary-ink:#ffffff;
+  --b-bg:#fdede1;            /* FT paper, in-app */
+  --b-surface:#fefbfa;       /* plan card */
+  --b-paper2:#fdf8f4;        /* plans background */
+  --b-ink:#181614;           /* text */
+  --b-ink2:#66605c;          /* black-60, secondary text */
+  --b-line:#e6d9ce;          /* rules */
+  --b-card:#ebe4de;          /* plan card border + offset shadow */
+  --b-accent2:#990f3d;       /* claret */
+  --b-claret:#990f3d;        /* topic tags, myFT pills */
+  --b-badge:#2d2c2c;         /* SAVE 20% / PREMIUM labels */
+  --b-peach:#f8cab2;         /* welcome texture ground */
+  --b-wheat:#ecd9cb;         /* home ground */
+  --b-dot:#c4b8ae;           /* carousel dots */
+  --b-tint:rgba(24,115,115,.1);
+  --b-grad:linear-gradient(180deg,#f8cab2,#f8cab2);
+  --b-radius:0px;
+  --b-pill:2px;
+  --b-chip:20px;
+  --b-font:'Figtree',-apple-system,system-ui,sans-serif;
+  --b-serif:'Source Serif 4',Georgia,serif;
+  --b-mono:'Source Serif 4',Georgia,serif;
+}
+/* BRAND:END */
+/* FT's second family: Financier Display (licensed) -> Source Serif 4, applied here (SCREENS css names only var(--b-font)) */
+.phone .scr .f-ser{font-family:var(--b-serif)}
+.phone .scr .f-ser *{font-family:inherit}
+.phone .scr .f-prem{font-family:var(--b-font)}
+
+/* ================= the audit page — Adapty's, not the app's. Light, Apple-style. ================= */
+:root{
+  color-scheme:light;
+  --st-ground:#f5f5f7; --st-card:#ffffff; --st-ink:#1d1d1f; --st-ink2:#6e6e73; --st-ink3:#86868b;
+  --st-hair:rgba(0,0,0,.09); --st-link:#0066cc;
+  --st-accent:#0d3f44;      /* dark brand colour of the APP: buttons, the outcome band */
+  --st-hi:#fcd0b1;          /* bright brand colour of the APP: outcome numbers on the band, idea dots */
+  --st-mark:rgba(252,208,177,.75); /* --st-hi at ~.5 alpha: the highlighter under impact numbers */
+  --st-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+html,body{margin:0}
+body{background:var(--st-ground);color:var(--st-ink);font-family:var(--st-font);-webkit-font-smoothing:antialiased;font-size:17px;line-height:1.47}
+.au-wrap{max-width:1080px;margin:0 auto;padding-inline:22px}
+a{color:var(--st-link)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--st-link);outline-offset:3px;border-radius:6px}
+mark{background:linear-gradient(transparent 62%,var(--st-mark) 62%,var(--st-mark) 92%,transparent 92%);color:inherit;padding:0 .04em}
+
+/* nav */
+.au-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(245,245,247,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--st-hair)}
+.au-nav-in{max-width:1080px;margin:0 auto;padding-inline:22px;height:52px;display:flex;align-items:center;gap:26px}
+.au-brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.au-brand img{width:26px;height:26px;border-radius:7px;flex:none}
+.au-brand span{font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.au-brand small{font-size:15px;font-weight:400;color:var(--st-ink2)}
+.au-nav a{font-size:13px;color:var(--st-ink);text-decoration:none;opacity:.82}
+.au-nav a:hover{opacity:1}
+@media (max-width:560px){.au-nav a.au-opt{display:none}.au-brand small{display:none}}
+
+/* hero */
+.au-top-hero{text-align:center;padding-top:clamp(56px,9vw,96px);overflow:hidden;position:relative}
+.au-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--st-ink);margin:0 0 14px}
+.au-eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-display{font-size:clamp(60px,12vw,120px);line-height:.98;font-weight:700;letter-spacing:-.05em;margin:0}
+.au-lede{font-size:clamp(23px,3.4vw,34px);line-height:1.16;font-weight:600;letter-spacing:-.022em;max-width:760px;margin:22px auto 0;text-wrap:balance}
+.au-lede span{color:var(--st-ink2)}
+.au-byline{font-size:14px;color:var(--st-ink3);margin:18px 0 0}
+.au-ctas{display:flex;gap:26px;justify-content:center;align-items:center;margin-top:30px;flex-wrap:wrap}
+.au-btn{display:inline-block;background:var(--st-accent);color:#fff;border-radius:980px;padding:12px 23px;font-size:17px;font-weight:500;text-decoration:none;border:0;cursor:pointer}
+.au-btn:hover{filter:brightness(1.25)}
+.au-lnk{background:none;border:0;padding:0;color:var(--st-link);font-size:17px;text-decoration:none;cursor:pointer}
+.au-lnk::after{content:"\00a0›"}
+.au-lnk:hover{text-decoration:underline}
+.au-phones{display:flex;justify-content:center;align-items:flex-start;margin-top:clamp(40px,6vw,64px);height:clamp(300px,52vw,560px)}
+.au-hp{flex:none;border:0;padding:0;background:none;cursor:pointer;width:27%;max-width:290px;margin:0 -2.5%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.au-hp img{display:block;width:100%;height:auto;filter:drop-shadow(0 28px 50px rgba(0,0,0,.2))}
+.au-hp.au-c{width:31%;max-width:330px;z-index:2}
+.au-hp.au-l{transform:translateY(12%) rotate(-5deg)}
+.au-hp.au-r{transform:translateY(12%) rotate(5deg)}
+.au-hp.au-l:hover{transform:translateY(9%) rotate(-5deg)}.au-hp.au-r:hover{transform:translateY(9%) rotate(5deg)}.au-hp.au-c:hover{transform:translateY(-3%)}
+
+/* sections */
+.au-sec{padding-block:clamp(72px,10vw,120px)}
+.au-sec.au-white{background:var(--st-card)}
+.au-kicker{font-size:15px;font-weight:600;color:var(--st-ink2);margin:0 0 12px}
+.au-h2{font-size:clamp(34px,5.2vw,56px);line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:0;text-wrap:balance}
+.au-h2 span{color:var(--st-ink3)}
+.au-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,6vw,80px);align-items:end}
+.au-split p{margin:0;font-size:clamp(17px,1.7vw,21px);line-height:1.45;color:var(--st-ink2);letter-spacing:-.01em}
+.au-split p b{color:var(--st-ink);font-weight:600}
+.au-split p + p{margin-top:16px}
+.au-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(48px,7vw,80px);border-top:1px solid var(--st-hair)}
+.au-stat{padding:28px 20px 0 0}
+.au-stat b{display:block;font-size:clamp(40px,5.5vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.au-stat span{display:block;font-size:15px;color:var(--st-ink2);margin-top:10px;max-width:22ch}
+.au-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);margin-top:clamp(48px,7vw,72px)}
+.au-note h3{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:0 0 8px}
+.au-note p{margin:0;font-size:15.5px;line-height:1.5;color:var(--st-ink2)}
+.au-note .au-ic{width:36px;height:36px;border-radius:10px;background:var(--st-ground);display:grid;place-items:center;margin-bottom:16px}
+.au-note .au-ic svg{width:19px;height:19px;stroke:var(--st-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ideas */
+.au-ideas-h{margin-bottom:clamp(32px,5vw,48px)}
+.au-list{background:var(--st-card);border-radius:28px;padding-inline:clamp(20px,4vw,44px)}
+.au-idea{display:grid;grid-template-columns:56px 1fr 220px;gap:20px;align-items:start;padding-block:clamp(26px,3.5vw,36px);border-top:1px solid var(--st-hair)}
+.au-idea:first-child{border-top:0}
+.au-idea .au-num{font-size:15px;font-weight:600;color:var(--st-ink3);font-variant-numeric:tabular-nums;padding-top:6px}
+.au-idea h3{font-size:clamp(21px,2.4vw,26px);line-height:1.2;font-weight:600;letter-spacing:-.022em;margin:0 0 8px}
+.au-idea p{margin:0 0 12px;font-size:17px;line-height:1.5;color:var(--st-ink2);max-width:58ch}
+.au-idea p code{font:600 15px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--st-ink);background:var(--st-ground);padding:2px 7px;border-radius:6px}
+.au-idea .au-lnk{font-size:15px}
+.au-imp{text-align:right}
+.au-imp .au-v{font-size:clamp(30px,3.6vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--st-accent)}
+.au-imp .au-l{font-size:13.5px;color:var(--st-ink2);margin-top:8px}
+.au-band{margin-top:20px;background:var(--st-accent);color:#fff;border-radius:28px;padding:clamp(32px,5vw,56px);display:grid;grid-template-columns:1fr auto;gap:clamp(28px,5vw,64px);align-items:center}
+.au-band .au-k{font-size:15px;font-weight:600;color:rgba(255,255,255,.62);margin:0 0 10px}
+.au-band h3{font-size:clamp(24px,3vw,32px);line-height:1.18;font-weight:600;letter-spacing:-.022em;margin:0;text-wrap:balance}
+.au-band .au-fn{font-size:13px;line-height:1.5;color:rgba(255,255,255,.55);margin:16px 0 0;max-width:52ch}
+.au-nums{display:flex;gap:clamp(28px,4vw,48px)}
+.au-nums small{display:block;font-size:13px;color:rgba(255,255,255,.62)}
+.au-nums b{display:block;font-size:clamp(48px,6.5vw,76px);font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-hi);font-variant-numeric:tabular-nums;margin:4px 0 8px}
+.au-nums span{font-size:14px;color:rgba(255,255,255,.8)}
+.au-band .au-btn{background:var(--st-hi);color:var(--st-accent);font-weight:600;margin-top:26px}
+
+/* prototype */
+.au-proto-h{text-align:center;max-width:720px;margin:0 auto}
+.au-proto-h p{font-size:clamp(17px,1.7vw,21px);color:var(--st-ink2);margin:14px 0 0}
+.au-seg{display:flex;gap:4px;justify-content:center;margin:clamp(28px,4vw,40px) auto 0;padding:4px;background:var(--st-ground);border-radius:980px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.au-seg::-webkit-scrollbar{display:none}
+.au-chip{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--st-ink2);font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:980px;cursor:pointer;white-space:nowrap}
+.au-chip:hover{color:var(--st-ink)}
+.au-chip.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.au-chip i{font-style:normal;font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--st-hi);color:var(--st-accent)}
+.au-stage{display:grid;grid-template-columns:auto minmax(0,420px);gap:clamp(32px,6vw,72px);justify-content:center;align-items:center;margin-top:clamp(28px,4vw,44px)}
+.phone{width:390px;height:844px;border-radius:56px;padding:10px;background:#0b0d10;box-shadow:0 0 0 1.5px #3a3d42,0 40px 90px rgba(0,0,0,.25);max-width:calc(100vw - 44px)}
+.phone-in{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--b-bg)}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:9}
+.sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:4px 32px 0;font:600 15px -apple-system,system-ui,sans-serif;color:var(--b-ink);z-index:8;pointer-events:none}
+.au-pn{background:var(--st-ground);border-radius:28px;padding:clamp(26px,3.5vw,38px)}
+.au-pn-k{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--st-ink)}
+.au-pn-k i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-pn-k.au-ctx{color:var(--st-ink2)}.au-pn-k.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-pn-t{font-size:clamp(24px,2.6vw,30px);line-height:1.12;font-weight:700;letter-spacing:-.028em;margin:10px 0 14px;text-wrap:balance}
+.au-pn-h{margin:0;font-size:17px;line-height:1.55;color:var(--st-ink2)}
+.au-pn-h b{color:var(--st-ink);font-weight:600}
+.au-pn-o{margin-top:24px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-pn-o .au-lab{font-size:13px;font-weight:600;color:var(--st-ink3)}
+.au-pn-o .au-val{font-size:clamp(38px,4.4vw,50px);font-weight:700;letter-spacing:-.04em;line-height:1.05;color:var(--st-accent);margin-top:6px;font-variant-numeric:tabular-nums}
+.au-pn-o .au-sub{font-size:14px;color:var(--st-ink2);margin-top:4px}
+.au-pn-a{margin:18px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-pn-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:18px;border-top:1px solid var(--st-hair);font-size:13px;color:var(--st-ink3)}
+.au-pn-nav button{background:var(--st-card);border:0;border-radius:980px;padding:8px 15px;font-size:14px;font-weight:500;color:var(--st-ink);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.au-pn-nav button:disabled{opacity:.35;cursor:default}
+.au-hint{text-align:center;font-size:14px;color:var(--st-ink3);margin:22px 0 0}
+
+/* footer */
+.au-foot{padding-block:56px 72px;border-top:1px solid var(--st-hair)}
+.au-foot details{border-bottom:1px solid var(--st-hair);padding-bottom:18px}
+.au-foot summary{cursor:pointer;font-size:17px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.au-foot summary::-webkit-details-marker{display:none}
+.au-foot summary::after{content:"+";font-size:24px;font-weight:300;color:var(--st-ink2)}
+.au-foot details[open] summary::after{content:"−"}
+.au-srcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 48px;margin-top:18px}
+.au-srcs h4{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--st-ink3);margin:18px 0 6px}
+.au-srcs dl{margin:0}.au-srcs dt{font-size:14.5px;font-weight:600;margin-top:10px}
+.au-srcs dd{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-fine{font-size:12.5px;line-height:1.6;color:var(--st-ink3);margin:22px 0 0;max-width:80ch}
+.au-cta-line{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:36px}
+.au-cta-line p{margin:0;font-size:clamp(19px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;max-width:34ch}
+
+@media (max-width:900px){
+  .au-split,.au-band{grid-template-columns:1fr}
+  .au-notes{grid-template-columns:1fr}
+  .au-idea{grid-template-columns:40px 1fr}
+  .au-imp{grid-column:2;text-align:left;display:flex;align-items:baseline;gap:10px}
+  .au-imp .au-l{margin:0}
+  .au-imp .au-v{white-space:nowrap}
+  .au-stage{grid-template-columns:1fr;justify-items:center}
+  .au-pn{width:100%;max-width:520px}
+  .au-srcs{grid-template-columns:1fr}
+}
+@media (max-width:560px){.au-stats{grid-template-columns:1fr}.au-stat{padding:22px 0 0}.au-nums{flex-direction:column;gap:18px}}
+
+/* ================= extras (audit side): video, language, phone view + QR, paywall today vs proposed, ?tour ================= */
+[hidden]{display:none!important}
+/* the device never scrolls: off-screen slides would otherwise make it scrollable by focus / scrollIntoView */
+.phone-in,.scr{overflow:clip}
+/* hero: walkthrough link */
+.au-play::before{content:"▶";font-size:.72em;margin-right:7px;position:relative;top:-1px}
+/* video dialog */
+.au-vid{border:0;padding:0;background:transparent;max-width:min(1120px,94vw);width:100%;overflow:visible}
+.au-vid::backdrop{background:rgba(0,0,0,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.au-vid-in{background:#000;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.au-vid video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.au-vid-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 4px 0;font-size:14px}
+.au-vid-bar a{color:#fff;opacity:.85}
+.au-vid-x{background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:980px;padding:8px 16px;font-size:14px;cursor:pointer}
+/* language switch */
+.au-langrow{display:flex;justify-content:center;align-items:center;gap:12px;margin:18px 0 0;font-size:13.5px;color:var(--st-ink2);flex-wrap:wrap}
+.au-lsw{display:inline-flex;gap:2px;padding:3px;background:var(--st-ground);border-radius:980px}
+.au-lsw button{border:0;background:none;padding:6px 13px;border-radius:980px;font-size:13.5px;font-weight:500;color:var(--st-ink2);cursor:pointer;white-space:nowrap}
+.au-lsw button.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* QR card (desktop) / full-screen button (phone) */
+.au-qr{display:flex;align-items:center;gap:18px;margin:26px auto 0;max-width:500px;background:var(--st-ground);border-radius:22px;padding:14px 22px 14px 14px}
+.au-qr img{width:112px;height:112px;border-radius:12px;image-rendering:pixelated;flex:none;background:#fff}
+.au-qr b{display:block;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.au-qr p{margin:4px 0 0;font-size:14.5px;line-height:1.45;color:var(--st-ink2)}
+.au-mobw{display:none;text-align:center;margin-top:22px}
+@media (max-width:900px){.au-qr{display:none}.au-mobw{display:block}}
+/* paywall: today vs proposed */
+.au-cmp{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr) minmax(0,290px);gap:clamp(24px,4vw,52px);align-items:center;margin-top:clamp(32px,5vw,52px)}
+.au-cmp figure{margin:0;text-align:center}
+.au-cmp figure img{display:block;width:100%;height:auto;filter:drop-shadow(0 24px 44px rgba(0,0,0,.18))}
+.au-cmp figcaption{margin-top:14px;font-size:15px;font-weight:600}
+.au-cmp figcaption span{color:var(--st-ink2);font-weight:400}
+.au-cmp-go{border:0;padding:0;background:none;cursor:pointer;display:block;width:100%;transition:transform .3s}
+.au-cmp-go:hover{transform:translateY(-4px)}
+.au-chg{list-style:none;margin:0;background:var(--st-card);border-radius:24px;padding:4px clamp(18px,2.4vw,28px)}
+.au-chg li{padding:15px 0;border-top:1px solid var(--st-hair)}
+.au-chg li:first-child{border-top:0}
+.au-chg h4{margin:0 0 7px;font-size:16px;font-weight:600;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.au-chg h4 i{font-style:normal;font-size:12px;font-weight:600;color:var(--st-accent);background:var(--st-mark);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.au-was,.au-now{display:grid;grid-template-columns:78px 1fr;gap:8px;font-size:14.5px;line-height:1.42}
+.au-was{color:var(--st-ink3)}
+.au-now{color:var(--st-ink);margin-top:3px}
+.au-was em,.au-now em{font-style:normal;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.au-now em{color:var(--st-link)}
+.au-kept{margin:22px 0 0;font-size:14px;color:var(--st-ink2);text-align:center}
+@media (max-width:900px){.au-cmp{grid-template-columns:1fr 1fr;gap:18px}.au-chg{grid-column:1 / -1;order:3}.au-was,.au-now{grid-template-columns:70px 1fr}}
+
+/* ?app — the prototype full screen on a real phone, with a bar that opens the idea panel */
+html.appmode,html.appmode body{height:100%;overflow:hidden;background:#000}
+html.appmode .au-nav,html.appmode .au-top-hero,html.appmode #why,html.appmode #ideas,html.appmode #compare,html.appmode .au-foot,
+html.appmode .au-proto-h,html.appmode #prototype .au-langrow,html.appmode #chips,html.appmode .au-hint,html.appmode .au-qr,html.appmode .au-mobw{display:none!important}
+html.appmode #prototype{padding:0;background:#000}
+html.appmode #prototype .au-wrap{padding:0;max-width:none}
+html.appmode .au-stage{display:block;margin:0}
+html.appmode .phone{position:fixed;top:0;left:0;right:0;margin:0 auto;width:min(100%,480px);height:calc(100% - 56px - env(safe-area-inset-bottom,0px));max-width:none;border-radius:0;padding:0;box-shadow:none;background:#000}
+html.appmode .phone-in{border-radius:0}
+html.appmode .island,html.appmode .sbar{display:none}
+html.appmode .scr .s-pad{padding-top:max(58px,calc(env(safe-area-inset-top,0px) + 16px))}
+html.appmode .scr .s-x,html.appmode .scr .s-lang{top:max(54px,calc(env(safe-area-inset-top,0px) + 10px))}
+.au-appbar,.au-scrim{display:none}
+html.appmode .au-appbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;height:calc(56px + env(safe-area-inset-bottom,0px));padding:0 12px env(safe-area-inset-bottom,0px) 16px;align-items:center;gap:12px;background:#0b0b0c;border-top:1px solid rgba(255,255,255,.1);color:#fff}
+.au-ab-why{flex:1;min-width:0;display:flex;align-items:center;gap:9px;background:none;border:0;color:#fff;font-size:14px;font-weight:500;text-align:left;cursor:pointer;padding:0}
+.au-ab-why i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);flex:none}
+.au-ab-why span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.au-ab-why em{font-style:normal;color:rgba(255,255,255,.6);margin-left:auto;flex:none;font-size:13px}
+.au-appbar .au-lsw{background:rgba(255,255,255,.12)}
+.au-appbar .au-lsw button{color:rgba(255,255,255,.75);padding:5px 11px}
+.au-appbar .au-lsw button.on{background:#fff;color:#000}
+html.appmode #panel{position:fixed;left:0;right:0;bottom:0;z-index:80;max-width:none;width:auto;margin:0 auto;border-radius:24px 24px 0 0;max-height:78%;overflow:auto;transform:translateY(105%);transition:transform .3s cubic-bezier(.3,.7,.2,1);padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
+html.appmode.au-open #panel{transform:none}
+html.appmode.au-open .au-scrim{display:block;position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.5)}
+
+/* ?tour — 1280×720 walkthrough frames (record-video.sh renders them into assets/walkthrough.mp4) */
+.au-tour{display:none}
+html.tourmode,html.tourmode body{overflow:hidden;background:var(--st-ground)}
+html.tourmode body *{visibility:hidden}
+html.tourmode .phone,html.tourmode .phone *,html.tourmode .au-tour,html.tourmode .au-tour *{visibility:visible}
+html.tourmode .phone{position:fixed;left:170px;top:44px;margin:0;transform:scale(.755);transform-origin:0 0;box-shadow:0 0 0 1.5px #3a3d42,0 34px 80px rgba(0,0,0,.22);z-index:5;max-width:none}
+html.tourmode .au-tour{display:block;position:fixed;inset:0;z-index:6;pointer-events:none;color:var(--st-ink)}
+.au-tb{position:absolute;left:590px;top:30px;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600}
+.au-tb img{width:26px;height:26px;border-radius:7px}
+.au-tb small{font-size:16px;font-weight:400;color:var(--st-ink2)}
+.au-tby{position:absolute;right:48px;top:32px;font-size:14px;color:var(--st-ink3)}
+.au-tcap{position:absolute;left:590px;right:60px;top:50%;transform:translateY(-50%)}
+.au-tk{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600}
+.au-tk i{width:9px;height:9px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-tk.au-ctx{color:var(--st-ink2)}.au-tk.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-tt{font-size:46px;line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:14px 0 14px;text-wrap:balance}
+.au-tl{font-size:23px;line-height:1.36;color:var(--st-ink2);letter-spacing:-.01em;margin:0;max-width:28ch}
+.au-to{margin-top:28px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-to small{display:block;font-size:14px;font-weight:600;color:var(--st-ink3)}
+.au-to b{display:inline-block;font-size:62px;font-weight:700;letter-spacing:-.045em;line-height:1.08;color:var(--st-accent);margin-top:4px}
+.au-to span{display:block;font-size:16px;color:var(--st-ink2);margin-top:2px}
+.au-tprog{position:absolute;left:48px;right:48px;bottom:22px;height:4px;border-radius:3px;background:var(--st-hair);overflow:hidden}
+.au-tprog i{display:block;height:100%;background:var(--st-hi)}
+.au-ttap{position:absolute;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.5);box-shadow:0 0 0 2.5px rgba(255,255,255,.9),0 6px 16px rgba(0,0,0,.35);opacity:0}
+.au-tintro,.au-tend{position:absolute;inset:0;background:var(--st-ground);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0}
+.au-tintro .au-lede{margin-top:18px}
+.au-te-h{font-size:46px;line-height:1.08;font-weight:700;letter-spacing:-.035em;margin:0;max-width:18ch;text-wrap:balance}
+.au-te-n{display:flex;gap:64px;margin-top:30px}
+.au-te-n small{display:block;font-size:14px;color:var(--st-ink2)}
+.au-te-n b{display:block;font-size:76px;font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-accent);margin:4px 0 6px}
+.au-te-n span{font-size:15px;color:var(--st-ink2)}
+.au-te-q{display:flex;align-items:center;gap:18px;margin-top:34px;background:var(--st-card);border-radius:20px;padding:12px 24px 12px 12px;text-align:left}
+.au-te-q img{width:104px;height:104px;border-radius:10px;image-rendering:pixelated}
+.au-te-q b{display:block;font-size:18px;font-weight:600}
+.au-te-q span{display:block;font-size:15px;color:var(--st-link);margin-top:3px}
+.au-te-f{position:absolute;bottom:44px;left:0;right:0;font-size:13px;color:var(--st-ink3);margin:0}
+
+/* ---------- screen engine (layout only, no colours) ---------- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--b-bg);color:var(--b-ink);font-family:var(--b-font);
+     transform:translateX(100%);transition:transform .32s cubic-bezier(.3,.7,.2,1);overflow:hidden;text-align:left;line-height:normal;font-size:16px}
+.scr.is-active{transform:none;z-index:2}.scr.is-past{transform:translateX(-28%)}.scr.under{transform:none;z-index:1}
+.scr.sheet{transform:translateY(100%)}.scr.sheet.is-active{transform:none}
+.nofx,.nofx *{transition:none!important}
+.shot .scr{transition:none!important}
+/* ?phone — just the device at (10,10), for shoot.sh and hero-stills.sh (&clear = transparent ground) */
+.phoneonly body{background:#141615}
+.phoneonly.clear body{background:transparent}
+.phoneonly body *{visibility:hidden}
+.phoneonly .phone,.phoneonly .phone *{visibility:visible}
+.phoneonly .phone{position:fixed;top:10px;left:10px;z-index:99;box-shadow:none;max-width:none;margin:0}
+
+/* SCREENS:START — Financial Times app screens. Colours only via var(--b-*) or white/black alpha. Classes are f- prefixed. */
+.f-body{flex:1;display:flex;flex-direction:column;padding:60px 20px 26px;position:relative;z-index:1;overflow:clip}
+.f-btn{display:block;width:100%;border:0;border-radius:var(--b-pill);background:var(--b-primary);color:var(--b-primary-ink);font:700 16px/1.2 var(--b-font);padding:13px 12px;cursor:pointer;text-align:center}
+.f-out{background:transparent;color:var(--b-primary);box-shadow:inset 0 0 0 1.5px var(--b-primary)}
+.f-txt{background:none;border:0;color:var(--b-primary);font:700 16px var(--b-font);padding:10px;cursor:pointer;display:block;margin:0 auto}
+.f-lnk{background:none;border:0;color:var(--b-primary);font:500 15px var(--b-font);text-decoration:underline;text-decoration-color:var(--b-line);text-underline-offset:4px;cursor:pointer;padding:8px 6px 4px;display:block;margin:0 auto}
+.f-u{color:var(--b-primary);text-decoration:underline;text-decoration-color:var(--b-line);text-underline-offset:3px}
+.f-x{position:absolute;top:52px;right:14px;background:none;border:0;cursor:pointer;z-index:4;padding:6px}
+.f-x svg{width:20px;height:20px;display:block;stroke:var(--b-ink);stroke-width:2;fill:none}
+.f-stars{color:var(--b-ink);letter-spacing:1px;font-size:12px}
+
+/* welcome — kept from their first-run screen */
+.f-wl-art{position:relative;height:74%;flex:none;background-color:var(--b-peach);background-image:url(assets/crop/texture.png),url(assets/crop/texture.png);background-size:50.2% auto,50.2% auto;background-position:0 0,100% 0;background-repeat:repeat-y;padding:78px 20px 0}
+.f-wl-logo{width:164px;display:block;margin-left:-2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
+.f-wl-copy{position:absolute;left:20px;right:20px;top:258px}
+.f-wl-h{font:700 46px/1.02 var(--b-font);letter-spacing:-.8px;margin:0;color:var(--b-ink)}
+.f-wl-rule{display:block;width:48px;height:4px;background:var(--b-ink);margin:22px 0 18px}
+.f-wl-sub{font:400 19px/1.3 var(--b-font);margin:0;color:var(--b-ink);max-width:250px}
+.f-wl-proof{margin:16px 0 0;font:500 13px var(--b-font);color:var(--b-ink);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.5);padding:6px 10px;width:max-content;max-width:100%}
+.f-wl-ctas{flex:1;background:var(--b-bg);padding:22px 28px 10px;display:flex;flex-direction:column;gap:10px}
+
+/* industry — their profile question, moved before the paywall */
+.f-top{position:absolute;top:44px;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:center;font:700 14px var(--b-font);color:var(--b-ink);border-bottom:1px solid var(--b-line);background:var(--b-bg);z-index:3}
+.f-bk{position:absolute;left:12px;top:6px;background:none;border:0;font:400 26px/1 var(--b-font);color:var(--b-ink);cursor:pointer;padding:2px 6px}
+.f-in-h{font:400 24px/1.2 var(--b-font);margin:22px 0 8px;color:var(--b-ink)}
+.f-in-s{font:400 13.5px/1.45 var(--b-font);color:var(--b-ink);margin:0 0 20px}
+.f-in-q{font:700 13.5px var(--b-font);margin:0 0 10px;color:var(--b-ink)}
+.f-opt{display:flex;align-items:center;justify-content:space-between;width:100%;background:white;border:1px solid var(--b-ink2);border-radius:2px;padding:12px;margin:0 0 8px;font:400 15px var(--b-font);color:var(--b-ink);cursor:pointer;text-align:left}
+.f-opt i{width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--b-ink2);flex:none}
+.f-opt.on{border-color:var(--b-primary);box-shadow:inset 0 0 0 1px var(--b-primary)}
+.f-opt.on i{box-shadow:inset 0 0 0 5px var(--b-primary)}
+.f-in-n{font:400 12.5px/1.4 var(--b-font);color:var(--b-ink2);margin:6px 0 0}
+
+/* myFT — the payoff */
+.f-ban{position:absolute;top:44px;left:0;right:0;height:46px;gap:10px;background:var(--b-primary);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;font:500 14px var(--b-font);z-index:3}
+.f-ban button{white-space:nowrap;flex:none;background:white;color:var(--b-primary);border:0;border-radius:var(--b-pill);font:700 13px var(--b-font);padding:7px 10px;cursor:pointer}
+.f-mf{padding:94px 0 70px;flex:1;display:flex;flex-direction:column}
+.f-mf-t{text-align:center;font:700 24px var(--b-font);margin:6px 0 6px;color:var(--b-ink)}
+.f-mf-t em{font-style:italic;font-weight:400}
+.f-tabs{display:flex;gap:16px;padding:0 16px;border-bottom:1px solid var(--b-line);font:500 13px var(--b-font);color:var(--b-ink2);white-space:nowrap;overflow:hidden;flex:none}
+.f-tabs span{padding:8px 0 9px}
+.f-tabs span:first-child{color:var(--b-ink);box-shadow:inset 0 -3px 0 var(--b-primary)}
+.f-done{margin:14px 16px 0;background:var(--b-wheat);padding:10px 12px;font:400 13.5px/1.4 var(--b-font);color:var(--b-ink);border-left:3px solid var(--b-primary)}
+.f-lab{font:700 12px var(--b-font);letter-spacing:.6px;text-transform:uppercase;color:var(--b-ink);margin:16px 16px 4px}
+.f-tp{display:flex;align-items:center;justify-content:space-between;margin:0 16px;padding:8px 0;border-bottom:1px solid var(--b-line);font:400 15px var(--b-font);color:var(--b-ink)}
+.f-tp b{font:500 12.5px var(--b-font);color:var(--b-claret);border:1px solid var(--b-claret);border-radius:var(--b-chip);padding:3px 10px}
+.f-story{display:block;text-align:left;width:calc(100% - 32px);margin:0 16px;padding:8px 0 12px;background:none;border:0;cursor:pointer;color:var(--b-ink)}
+.f-tag{font:500 13px var(--b-font);color:var(--b-claret);margin:0 0 4px;display:block}
+.f-hl{display:block;font:400 21px/1.18 var(--b-font);margin:0;color:var(--b-ink)}
+.f-sf{display:block;font:400 13.5px/1.4 var(--b-font);color:var(--b-ink2);margin:6px 0 0}
+.f-by{display:block;font:400 12.5px var(--b-font);color:var(--b-ink2);margin:8px 0 0}
+.f-by b{color:var(--b-ink)}
+.f-prem{background:var(--b-badge);color:white;font:500 11px var(--b-font);letter-spacing:.5px;padding:2px 6px;vertical-align:middle;margin-left:4px}
+.f-tbar{position:absolute;left:0;right:0;bottom:0;height:66px;background:var(--b-bg);border-top:1px solid var(--b-line);display:flex;justify-content:space-around;align-items:flex-start;padding-top:9px;z-index:3}
+.f-tbar span{display:flex;flex-direction:column;align-items:center;gap:3px;font:500 10.5px var(--b-font);color:var(--b-ink2)}
+.f-tbar span.on{color:var(--b-primary)}
+.f-tbar svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8}
+
+/* barrier — the paywall on a story */
+.f-nav{position:absolute;top:44px;left:0;right:0;height:48px;display:flex;align-items:center;gap:8px;padding:0 14px;background:var(--b-bg);border-bottom:1px solid var(--b-line);z-index:3;font:400 24px var(--b-font);color:var(--b-ink)}
+.f-nav svg{width:22px;height:22px;fill:none;stroke:var(--b-ink);stroke-width:2;display:block}
+.f-nav .f-nb{background:none;border:0;padding:0;cursor:pointer}
+.f-nav .f-bm{margin-left:auto}
+.f-art{position:absolute;top:92px;left:0;right:0;bottom:0;padding:14px 16px;overflow:hidden}
+.f-art .f-hl{font-size:25px}
+.f-art::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.72)}
+.f-lis{display:flex;align-items:center;gap:10px;margin-top:12px;font:700 13px var(--b-font)}
+.f-lis i{width:30px;height:30px;border-radius:50%;background:var(--b-primary);flex:none}
+.f-lis small{display:block;font-weight:400;color:var(--b-ink2)}
+.f-sh{position:absolute;left:0;right:0;bottom:0;min-height:50%;background:var(--b-bg);padding:20px 22px 16px;display:flex;flex-direction:column}
+.f-sh-h{font:400 25px/1.15 var(--b-font);text-align:center;margin:0 0 14px;color:var(--b-ink)}
+.f-tl{list-style:none;margin:0 0 14px;padding:0;position:relative}
+.f-tl::before{content:"";position:absolute;left:6px;top:8px;bottom:14px;width:2px;background:var(--b-line)}
+.f-tl li{position:relative;padding:0 0 9px 24px;font:400 13.5px/1.35 var(--b-font);color:var(--b-ink)}
+.f-tl li::before{content:"";position:absolute;left:0;top:2px;width:14px;height:14px;border-radius:50%;background:var(--b-bg);box-shadow:inset 0 0 0 2px var(--b-primary)}
+.f-tl li:first-child::before{background:var(--b-primary)}
+.f-tl b{display:block;font:700 13px var(--b-font)}
+.f-org{font:400 13px/1.45 var(--b-font);text-align:center;margin:4px 0 0;color:var(--b-ink)}
+
+/* plans — proposed */
+.f-pw{background:var(--b-paper2);padding:84px 20px 18px;flex:1;display:flex;flex-direction:column}
+.f-pw-h{font:700 25px/1.12 var(--b-font);text-align:center;margin:0 6px 8px;color:var(--b-ink)}
+.f-pw-s{font:400 12.5px/1.4 var(--b-font);text-align:center;margin:0;color:var(--b-ink)}
+.f-seg{position:relative;display:flex;align-self:center;border:1px solid var(--b-line);background:white;padding:3px;margin:24px 0 14px;flex:none}
+.f-seg button{border:0;background:none;font:400 14px var(--b-font);color:var(--b-primary);padding:7px 0;width:104px;cursor:pointer}
+.f-seg button.on{background:var(--b-primary);color:white}
+.f-save{position:absolute;top:-16px;right:4px;background:var(--b-badge);color:white;font:400 12px var(--b-font);padding:3px 8px;border-radius:3px;white-space:nowrap}
+.f-card{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--b-surface);border:1px solid var(--b-card);box-shadow:3px 3px 0 var(--b-card);padding:12px 14px;margin:0 0 10px;cursor:pointer;color:var(--b-ink);flex:none}
+.f-card.on{border-color:var(--b-primary);box-shadow:inset 0 0 0 1px var(--b-primary),3px 3px 0 var(--b-card)}
+.f-card>i{width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--b-ink2);flex:none;margin-top:4px}
+.f-card.on>i{box-shadow:inset 0 0 0 5px var(--b-primary)}
+.f-card>div{flex:1;min-width:0}
+.f-pn{font:700 19px var(--b-font);margin:0 0 3px;display:block;color:var(--b-ink)}
+.f-pr{font:400 13px var(--b-font);color:var(--b-ink);display:block;white-space:nowrap}
+.f-pr b{font:700 19px var(--b-font);color:var(--b-primary);margin-right:2px}
+.f-eq{font:400 12.5px var(--b-font);color:var(--b-ink2);display:block;margin-top:2px}
+.f-sv{display:inline-block;margin-top:6px;font:700 12px var(--b-font);color:var(--b-primary);background:var(--b-tint);padding:3px 7px;white-space:nowrap}
+.f-ul{margin:2px 0 8px;padding:0 0 0 18px;font:400 13px/1.55 var(--b-font);color:var(--b-ink)}
+.f-proof{text-align:center;font:500 12.5px var(--b-font);color:var(--b-ink);margin:auto 0 10px}
+.f-terms{text-align:center;font:400 12.5px var(--b-font);margin:10px 0 0;color:var(--b-ink)}
+
+/* offer on close — FT Edit */
+.f-of{background:var(--b-bg);padding:46px 0 14px;flex:1;display:flex;flex-direction:column}
+.f-of-art{width:100%;display:block;margin:0 0 4px}
+.f-of-in{padding:0 22px;display:flex;flex-direction:column;flex:1}
+.f-of-h{font:400 25px/1.15 var(--b-font);text-align:center;margin:0 0 6px;color:var(--b-ink)}
+.f-of-s{font:400 13.5px/1.4 var(--b-font);text-align:center;margin:0 0 12px;color:var(--b-ink2)}
+.f-of-c{background:var(--b-surface);border:1px solid var(--b-card);box-shadow:3px 3px 0 var(--b-card);padding:14px 16px 16px;text-align:center}
+.f-of-c .f-pn{font-size:24px}
+.f-of-c .f-ul{text-align:left;margin:10px 0 12px}
+.f-of-y{font:400 12.5px/1.4 var(--b-font);text-align:center;margin:10px 0 0;color:var(--b-ink2)}
+
+/* today — their plans carousel, rebuilt for the side-by-side */
+.f-td{background:var(--b-paper2);padding:94px 0 18px;flex:1;display:flex;flex-direction:column;align-items:center}
+.f-td .f-pw-s{padding:0 34px;font-size:13.5px}
+.f-td-row{display:flex;gap:14px;width:100%;justify-content:center;margin-top:12px}
+.f-td-peek{width:34px;flex:none;border:1px solid var(--b-card);background:var(--b-surface);height:420px}
+.f-td-c{width:262px;flex:none;background:var(--b-surface);border:1px solid var(--b-card);box-shadow:3px 3px 0 var(--b-card);padding:40px 16px 20px;text-align:center;display:flex;flex-direction:column;height:420px}
+.f-td-c .f-pn{font-size:25px}
+.f-td-c .f-pr{margin-top:12px}
+.f-td-c .f-pr b{font-size:25px}
+.f-td-c .f-ul{text-align:left;margin:22px 0 0;font-size:12.5px}
+.f-td-c .f-btn{margin-top:auto;font-size:14px}
+.f-dots{display:flex;gap:9px;margin:20px 0 12px}
+.f-dots i{width:10px;height:10px;border-radius:50%;background:var(--b-dot)}
+.f-dots i.on{background:var(--b-primary)}
+/* SCREENS:END */
+</style>
+</head>
+<body>
+
+<nav class="au-nav" aria-label="Sections">
+  <div class="au-nav-in">
+    <div class="au-brand">
+      <img src="assets/brand/appstore-icon.jpg" alt="">
+      <span>Growth Audit <small>· Financial Times</small></span>
+    </div>
+    <a class="au-opt" href="#why">Why this</a>
+    <a href="#ideas">Five ideas</a>
+    <a href="#prototype">Prototype</a>
+    <a class="au-opt" href="#compare" id="navCompare" hidden>Paywall</a>
+  </div>
+</nav>
+
+<header class="au-top-hero" id="top">
+  <div class="au-wrap">
+    <p class="au-eyebrow"><i></i>Growth Audit · October 2026</p>
+    <h1 class="au-display">Financial Times</h1>
+    <p class="au-lede">Five ideas to turn more FT app readers into App Store subscribers. <span>Each one built into your own onboarding, so you can tap through it.</span></p>
+    <p class="au-byline">Prepared by Adapty for the Financial Times team</p>
+    <div class="au-ctas">
+      <a class="au-btn" href="#ideas">See the five ideas</a>
+      <a class="au-lnk" href="#prototype">Open the prototype</a>
+      <button type="button" class="au-lnk au-play" id="heroVideo" hidden>Watch the 30-second walkthrough</button>
+    </div>
+  </div>
+  <!-- filled from CONTENT.hero: three screen ids → assets/hero/<id>.png (make them with hero-stills.sh) -->
+  <div class="au-phones" id="heroPhones" aria-label="Three screens from the prototype"></div>
+</header>
+
+<section class="au-sec au-white" id="why">
+  <div class="au-wrap">
+    <div class="au-split">
+      <div>
+        <p class="au-kicker">Why you’re seeing this</p>
+        <h2 class="au-h2">30,000 subscription apps taught us what moves conversion. <span>Here’s what we’d test first at Financial Times.</span></h2>
+      </div>
+      <div>
+        <p>Adapty runs subscriptions for <b>more than 30,000 apps</b>, so we see which onboarding and paywall changes lift revenue across the whole market, not just inside one app.</p>
+        <p>We pointed that at Financial Times. We took <b>your own screens, copy and prices</b> from your live iOS flow and App Store listing, and rebuilt the path from install to paywall around the five ideas with the most potential.</p>
+      </div>
+    </div>
+    <div class="au-stats">
+      <div class="au-stat"><b>30,000+</b><span>apps run their subscriptions on Adapty</span></div>
+      <div class="au-stat"><b>5</b><span>ideas, each built as a working screen</span></div>
+      <div class="au-stat"><b>0</b><span>changes to your art direction</span></div>
+    </div>
+    <div class="au-notes">
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg></div>
+        <h3>Five ideas, not fifteen</h3>
+        <p>We’re not proposing to rebuild every screen. These are the changes with the highest potential, ranked by what we’d test first.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/></svg></div>
+        <h3>Your design, not ours</h3>
+        <p>Every colour, control and price in the prototype is Financial Times’s. We changed the order and what gets shown.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13A1.5 1.5 0 0 1 5.5 4H15"/></svg></div>
+        <h3>We hope you haven’t tried these yet</h3>
+        <p>We work from the outside, so we can’t see your test history. If you’ve already run one of these, tell us and we’ll go deeper on the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec" id="ideas">
+  <div class="au-wrap">
+    <div class="au-ideas-h">
+      <p class="au-kicker">The shortlist</p>
+      <h2 class="au-h2">Five ideas. <span>Ranked by what we’d test first.</span></h2>
+    </div>
+    <div class="au-list" id="ideaList"></div>
+    <div class="au-band">
+      <div>
+        <p class="au-k">Potential outcome, based on Adapty data</p>
+        <h3>Together they work on four moments in the app: the first screen, the question you already ask, the story someone wants to finish, and what happens when they say no.</h3>
+        <p class="au-fn" id="bandFn"></p>
+        <a class="au-btn" href="#prototype">Tap through the prototype</a>
+      </div>
+      <div class="au-nums" id="bandNums"></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec au-white" id="prototype">
+  <div class="au-wrap">
+    <div class="au-proto-h">
+      <p class="au-kicker">The prototype</p>
+      <h2 class="au-h2">Every idea, inside your own onboarding.</h2>
+      <p>Tap through it like a new user, or jump straight to an idea. Numbered screens carry an idea.</p>
+    </div>
+    <div class="au-langrow" id="langRow" hidden><span>Prototype language</span><div class="au-lsw" id="langSw" role="group" aria-label="Prototype language"></div></div>
+    <div class="au-seg" id="chips" role="tablist" aria-label="Screens"></div>
+    <div class="au-stage">
+      <div class="phone"><div class="phone-in">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+
+<!-- SCREENS:START — Financial Times: welcome → industry → myFT → story barrier → plans → FT Edit on close (+ today, aside) -->
+
+<section class="scr" data-id="welcome">
+  <div class="f-wl-art">
+    <img class="f-wl-logo" src="assets/crop/raw-logo.png" alt="Financial Times">
+    <div class="f-wl-copy">
+      <h1 class="f-wl-h f-ser" data-t="wl_h">Fearless Thinking</h1>
+      <i class="f-wl-rule"></i>
+      <p class="f-wl-sub" data-t="wl_sub">Globally trusted reporting since 1888</p>
+      <p class="f-wl-proof"><span class="f-stars">★★★★★</span><span data-t="wl_proof">4.8 · 24K ratings on the App Store</span></p>
+    </div>
+  </div>
+  <div class="f-wl-ctas">
+    <button class="f-btn" data-go="paywall"><span data-t="wl_cta">Subscribe today from $1</span></button>
+    <button class="f-btn f-out"><span data-t="wl_sign">Sign in</span></button>
+    <button class="f-txt f-wl-not" data-go="industry"><span data-t="wl_not">Not now</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="industry">
+  <div class="f-top"><button class="f-bk" data-back aria-label="Back">‹</button><span data-t="in_top">Complete your profile</span></div>
+  <div class="f-body" style="padding-top:88px">
+    <h1 class="f-in-h" data-t="in_h">Tell us about you</h1>
+    <p class="f-in-s" data-t="in_sub">This helps us personalise and provide the best possible FT experience for you.</p>
+    <p class="f-in-q" data-t="in_q">In which industry do you work?</p>
+    <button class="f-opt" data-pick="ind:bank"><span data-t="in_o1">Banking</span><i></i></button>
+    <button class="f-opt" data-pick="ind:cap"><span data-t="in_o2">Capital Markets</span><i></i></button>
+    <button class="f-opt" data-pick="ind:mine"><span data-t="in_o3">Basic resources/mining</span><i></i></button>
+    <button class="f-opt" data-pick="ind:oth"><span data-t="in_o4">Other</span><i></i></button>
+    <p class="f-in-n" data-t="in_note">Year of birth, role and position can wait until you create an account.</p>
+    <button class="f-btn f-in-go" style="margin-top:auto" data-go="myft"><span data-t="in_cta">Start reading</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="myft">
+  <div class="f-ban"><span data-t="mf_ban">Subscribe for full access</span><button data-go="paywall"><span data-t="mf_opt">See options</span></button></div>
+  <div class="f-mf">
+    <p class="f-mf-t f-ser"><em>my</em>FT</p>
+    <div class="f-tabs" data-t="mf_tabs"><span>Feed</span><span>Saved</span><span>Topics</span><span>Portfolio</span><span>History</span><span>Newsletters</span></div>
+    <p class="f-done" data-t="mf_done">Based on <b><span data-bind="label:ind"></span></b>, we added 3 topics to your myFT.</p>
+    <p class="f-lab" data-t="mf_follow">Topics you follow</p>
+    <div data-show="ind:bank"><p class="f-tp">US banks <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Financials <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Economy <b>✓ <span data-t="mf_added">Added</span></b></p></div>
+    <div data-show="ind:cap"><p class="f-tp">Markets <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Financials <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Companies <b>✓ <span data-t="mf_added">Added</span></b></p></div>
+    <div data-show="ind:mine"><p class="f-tp">Oil <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Energy sector <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Climate change <b>✓ <span data-t="mf_added">Added</span></b></p></div>
+    <div data-show="ind:oth"><p class="f-tp">Companies <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Economy <b>✓ <span data-t="mf_added">Added</span></b></p><p class="f-tp">Markets <b>✓ <span data-t="mf_added">Added</span></b></p></div>
+    <p class="f-lab" data-t="mf_latest">Latest from your topics</p>
+    <div data-show="ind:bank"><button class="f-story" data-go="barrier"><span class="f-tag">US banks</span><span class="f-hl f-ser">Bessent called in US bank CEOs to discuss Anthropic model’s cyber risks</span></button></div>
+    <div data-show="ind:cap"><button class="f-story" data-go="barrier"><span class="f-hl f-ser">Six lessons for investors on pricing disaster</span><span class="f-by">Gillian Tett</span></button></div>
+    <div data-show="ind:mine"><button class="f-story" data-go="barrier"><span class="f-tag">Energy sector</span><span class="f-hl f-ser">The climate showdown between Big Oil and US states <span class="f-prem">PREMIUM</span></span><span class="f-sf">Vermont and New York’s ‘climate superfund’ laws face legal challenges and a pending Supreme Court case</span></button></div>
+    <div data-show="ind:oth"><button class="f-story" data-go="barrier"><span class="f-tag">Universal Music Group</span><span class="f-hl f-ser">Bill Ackman tries to make music and money mix with €55bn Universal bid</span><span class="f-sf">Billionaire hedge fund manager’s pursuit reignites debate about ‘financialisation’ of music industry</span></button></div>
+  </div>
+  <div class="f-tbar">
+    <span><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><b data-t="tb_home" style="font-weight:500">Home</b></span>
+    <span class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>myFT</span>
+    <span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg><b data-t="tb_search" style="font-weight:500">Search</b></span>
+    <span><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</span>
+  </div>
+</section>
+
+<section class="scr" data-id="barrier">
+  <div class="f-nav"><button class="f-nb" data-back aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="f-ser" data-t="br_home">Home</span><svg class="f-bm" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-5-6 5z"/></svg></div>
+  <div class="f-art">
+    <div data-show="ind:bank"><span class="f-tag">US banks</span><p class="f-hl f-ser">Bessent called in US bank CEOs to discuss Anthropic model’s cyber risks</p></div>
+    <div data-show="ind:cap"><p class="f-hl f-ser">Six lessons for investors on pricing disaster</p><p class="f-by">Gillian Tett</p></div>
+    <div data-show="ind:mine"><span class="f-tag">Energy sector</span><p class="f-hl f-ser">The climate showdown between Big Oil and US states <span class="f-prem">PREMIUM</span></p><p class="f-sf">Vermont and New York’s ‘climate superfund’ laws face legal challenges and a pending Supreme Court case</p><p class="f-by"><b>Alexandra White</b> in New York</p><div class="f-lis"><i></i><div><span data-t="br_listen">Listen to this article</span><small data-t="br_min">7 min listen</small></div></div></div>
+    <div data-show="ind:oth"><span class="f-tag">Universal Music Group</span><p class="f-hl f-ser">Bill Ackman tries to make music and money mix with €55bn Universal bid</p><p class="f-sf">Billionaire hedge fund manager’s pursuit reignites debate about ‘financialisation’ of music industry</p></div>
+  </div>
+  <div class="f-sh">
+    <h2 class="f-sh-h f-ser" data-t="br_h">Finish this story for $1</h2>
+    <ul class="f-tl">
+      <li><b data-t="br_t1h">Today</b><span data-t="br_t1">Full access to all Standard and Premium content for $1</span></li>
+      <li><b data-t="br_t2h">In 1 month</b><span data-t="br_t2">$75 per month for Premium Digital, unless you cancel</span></li>
+      <li><b data-t="br_t3h">Any time</b><span data-t="br_t3">Cancel anytime from your App Store subscriptions</span></li>
+    </ul>
+    <button class="f-btn"><span data-t="br_cta">Start my $1 trial</span></button>
+    <button class="f-lnk br-more" data-go="paywall"><span data-t="br_more">More Plans</span></button>
+    <p class="f-org" data-t="br_org">Check if you can get <span class="f-u">free access through your organisation.</span></p>
+  </div>
+</section>
+
+<section class="scr" data-id="paywall">
+  <button class="f-x" data-go="offer" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <div class="f-pw">
+    <h1 class="f-pw-h f-ser"><span data-t="pw_h">Stay a step ahead</span> <span class="f-pw-ind">in resources and mining</span>.</h1>
+    <p class="f-pw-s" data-t="pw_top">To continue reading please subscribe or if you have an account please <span class="f-u">sign in</span></p>
+    <div class="f-seg"><button data-pick="per:mo"><span data-t="pw_mo">Monthly</span></button><button data-pick="per:yr"><span data-t="pw_yr">Annual</span></button><span class="f-save" data-t="pw_save">SAVE 20%</span></div>
+    <button class="f-card" data-pick="plan:std"><i></i><div>
+      <span class="f-pn f-ser">Standard Digital</span>
+      <span data-show="per:yr"><span class="f-pr" data-t="pw_syr"><b>$429</b> per year</span><span class="f-eq" data-t="pw_seq">(Equivalent of $35.75 monthly)</span><span class="f-sv" data-t="pw_ssv">$111 less than paying monthly</span></span>
+      <span data-show="per:mo"><span class="f-pr" data-t="pw_smo"><b>$45</b> per month</span><span class="f-eq" data-t="pw_auto">Auto renews monthly</span></span>
+    </div></button>
+    <button class="f-card" data-pick="plan:prem"><i></i><div>
+      <span class="f-pn f-ser">Premium Digital</span>
+      <span data-show="per:yr"><span class="f-pr" data-t="pw_pyr"><b>$719</b> per year</span><span class="f-eq" data-t="pw_peq">(Equivalent of $59.92 monthly)</span><span class="f-sv" data-t="pw_psv">$181 less than paying monthly</span></span>
+      <span data-show="per:mo"><span class="f-pr" data-t="pw_pmo"><b>$75</b> per month</span><span class="f-eq" data-t="pw_auto">Auto renews monthly</span></span>
+    </div></button>
+    <ul class="f-ul" data-show="plan:std">
+      <li data-t="pw_s1">Stay informed with global news &amp; analysis</li>
+      <li data-t="pw_s2">Gain clarity from expert opinion</li>
+      <li data-t="pw_s3">20+ curated newsletters</li>
+      <li data-t="pw_s4">FirstFT briefing</li>
+    </ul>
+    <ul class="f-ul" data-show="plan:prem">
+      <li data-t="pw_p0">All benefits of Standard, plus:</li>
+      <li data-t="pw_p1">Lex: FT’s flagship investment column</li>
+      <li data-t="pw_p2">15+ Premium newsletters from leading experts</li>
+      <li data-t="pw_p3">FT Digital Edition: our digitised print edition</li>
+    </ul>
+    <p class="f-proof"><span class="f-stars">★★★★★</span> <span data-t="pw_proof">4.8 · 24K ratings on the App Store</span></p>
+    <button class="f-btn pw-cta"><span data-t="pw_cta">Subscribe Now</span></button>
+    <p class="f-terms" data-t="pw_terms">Full <span class="f-u">Terms and Conditions</span> apply</p>
+  </div>
+</section>
+
+<section class="scr sheet" data-id="offer">
+  <button class="f-x" data-go="paywall" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <div class="f-of">
+    <img class="f-of-art" src="assets/crop/edit-cards.png" alt="FT Edit stories">
+    <div class="f-of-in">
+      <h2 class="f-of-h f-ser" data-t="of_h">Not ready for the whole FT?</h2>
+      <p class="f-of-s" data-t="of_s">Start with FT Edit: a daily slice of the FT.</p>
+      <div class="f-of-c">
+        <span class="f-pn f-ser">FT Edit</span>
+        <span class="f-pr" data-t="of_pr"><b>$4.99</b> per month</span>
+        <ul class="f-ul">
+          <li data-t="of_b1">8 stories a day, hand-picked by senior editors</li>
+          <li data-t="of_b2">FT Edit newsletter delivered to your inbox</li>
+          <li data-t="of_b3">Dedicated FT Edit reading space in the app</li>
+        </ul>
+        <button class="f-btn of-cta"><span data-t="pw_cta">Subscribe Now</span></button>
+      </div>
+      <p class="f-of-y" data-t="of_yr">Or $49 per year (Equivalent of $4.08 monthly). Auto renews, cancel anytime.</p>
+      <button class="f-txt" data-go="myft" style="margin-top:auto"><span data-t="wl_not">Not now</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="scr" data-id="today" data-aside>
+  <button class="f-x" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <div class="f-td">
+    <p class="f-pw-s">To continue reading please subscribe or if you have an account please <span class="f-u">sign in</span></p>
+    <div class="f-seg" style="margin-top:30px"><button class="on">Monthly</button><button>Annual</button><span class="f-save">SAVE 20%</span></div>
+    <div class="f-td-row">
+      <div class="f-td-peek"></div>
+      <div class="f-td-c">
+        <span class="f-pn f-ser">Standard Digital</span>
+        <span class="f-pr"><b>$45</b> per month</span>
+        <span class="f-eq" style="margin-top:12px;color:var(--b-ink)">Auto renews monthly</span>
+        <ul class="f-ul">
+          <li>Stay informed with global news &amp; analysis</li>
+          <li>Gain clarity from expert opinion</li>
+          <li>20+ curated newsletters</li>
+          <li>FirstFT briefing</li>
+          <li>myFT personal newsfeed</li>
+          <li>10 monthly gift articles</li>
+        </ul>
+        <button class="f-btn">Subscribe Now</button>
+      </div>
+      <div class="f-td-peek"></div>
+    </div>
+    <div class="f-dots"><i></i><i></i><i class="on"></i><i></i></div>
+    <p class="f-terms">Full <span class="f-u">Terms and Conditions</span> apply</p>
+  </div>
+</section>
+<!-- SCREENS:END -->
+
+      </div></div>
+      <div class="au-pn" id="panel" aria-live="polite"></div>
+    </div>
+    <p class="au-hint">Close the plans with ✕ to see idea 5. Tap a different industry to see the myFT, story and headline change.</p>
+    <!-- shown when CONTENT.liveUrl is set: assets/qr-app.png = qr.swift "<liveUrl>?app" -->
+    <div class="au-qr" id="qrCard" hidden><img src="assets/qr-app.png" alt="QR code that opens the prototype full screen"><div><b>Try it on your phone</b><p>Scan to open the prototype full screen, the way a new user would see it.</p></div></div>
+    <div class="au-mobw" id="qrMob" hidden><a class="au-btn" href="?app">Open it full screen</a></div>
+  </div>
+</section>
+
+<!-- the paywall TODAY vs PROPOSED — built from CONTENT.compare (stills: assets/hero/<today>.png, <proposed>.png) -->
+<section class="au-sec" id="compare" hidden><div class="au-wrap" id="cmpBody"></div></section>
+
+<footer class="au-foot" id="sources">
+  <div class="au-wrap">
+    <details id="srcDetails">
+      <summary>Where the numbers come from</summary>
+      <div class="au-srcs" id="srcBody"></div>
+    </details>
+    <p class="au-fine" id="fine"></p>
+    <div class="au-cta-line">
+      <p>Every screen here can be built and A/B tested in Adapty’s Flow Builder, with no app release.</p>
+      <a class="au-btn" href="https://adapty.io/flow-paywall-builder/" target="_blank" rel="noopener">About Flow Builder</a>
+    </div>
+  </div>
+</footer>
+
+<!-- extras: video dialog (CONTENT.video), ?app bar, ?tour overlay (CONTENT.tour) -->
+<dialog class="au-vid" id="vid" aria-label="Walkthrough video">
+  <div class="au-vid-in"><video id="vidEl" controls muted playsinline preload="none"></video></div>
+  <div class="au-vid-bar"><a id="vidDl" download>Download the MP4</a><button type="button" class="au-vid-x" id="vidX">Close</button></div>
+</dialog>
+<div class="au-scrim" id="abScrim"></div>
+<div class="au-appbar" id="appbar">
+  <button type="button" class="au-ab-why" id="abWhy"><i></i><span id="abT"></span><em>Why ↑</em></button>
+  <div class="au-lsw" id="abLang" role="group" aria-label="Language"></div>
+</div>
+<div class="au-tour" aria-hidden="true">
+  <div class="au-tb"><img src="assets/brand/appstore-icon.jpg" alt="">Growth Audit <small>· Financial Times</small></div>
+  <div class="au-tby">Prepared by Adapty</div>
+  <div class="au-tcap" id="tCap"></div>
+  <div class="au-ttap" id="tTap"></div>
+  <div class="au-tprog"><i id="tProg"></i></div>
+  <div class="au-tintro" id="tIntro"></div>
+  <div class="au-tend" id="tEnd"></div>
+</div>
+
+<!-- CONTENT — all the audit's words and numbers, as data. Schema (brand-check enforces it):
+     ideas  : 3–5 rows, ranked (the audit is five ideas, never fifteen). screen = the screen that shows it.
+     panel  : one entry per screen. idea = its number in ideas (1-based) or 0 for a context screen.
+              why on an idea screen reads "<b>Try</b> X, <b>because</b> Y." in ≤ 45 words; iv = its range.
+              why on a context screen is one line saying what it sets up.
+     hero   : three screen ids shown as stills in the hero — run hero-stills.sh after the screens are done.
+     outcome: combined "up to" numbers, PS-deck style, never above the ceiling of the per-idea ranges.
+     sources: public facts only — App Store, their site, their screens. No sales research on this page.
+     EXTRAS (each one hides itself when left empty):
+     langs  : [{"code":"en","name":"English"},{"code":"es","name":"Español · Spain prices"}] — first = the markup's language
+     i18n   : {"es": {"<data-t key>": "text with {tokens}"}} — every data-t key, for every language after the first
+     prices : {"es": {"yr": "39,99 €", …}} — {tokens} in i18n strings; that storefront's real IAP prices
+     labelsI18n: {"es": {"goal": {"a": "…"}}} — C.labels per language (data-bind="label:…")
+     liveUrl: final Pages URL (QR card + video end card); the QR file encodes liveUrl + "?app"
+     video / poster: "assets/walkthrough.mp4" / "assets/walkthrough-poster.jpg" (record-video.sh)
+     compare: {today, proposed, kicker, title, sub, todayCap, rows:[{h, idea, was, now}], kept} — today = a data-aside screen
+     tour   : {segments:[{id, d, st, tap:[selector-in-screen, ms], pop, reveal, end}], captions:{id:{n|k, t, l, o, ol}},
+              introLede, endTitle} — ~30 s total; the last segment has end:true (the end card) -->
+<script type="application/json" id="content">
+{
+ "app": "Financial Times",
+ "state": {
+  "ind": "mine",
+  "per": "yr",
+  "plan": "std"
+ },
+ "labels": {
+  "ind": {
+   "bank": "Banking",
+   "cap": "Capital Markets",
+   "mine": "Basic resources/mining",
+   "oth": "your industry"
+  }
+ },
+ "chips": {
+  "welcome": "Welcome",
+  "industry": "Your industry",
+  "myft": "Your myFT",
+  "barrier": "Story barrier",
+  "paywall": "Plans",
+  "offer": "On close"
+ },
+ "hero": [
+  "myft",
+  "paywall",
+  "barrier"
+ ],
+ "outcome": {
+  "cr": "+20%",
+  "arpu": "+15%"
+ },
+ "ideas": [
+  {
+   "screen": "myft",
+   "title": "Use the profile answers you already collect",
+   "what": "Today “Tell us about you” asks four questions (year of birth, industry, role, position) after account creation, and nothing before the paywall uses them. Ask the industry first, in one tap, and answer it at once: the myFT topics it adds, a story from them, and a plans headline that names it.",
+   "impact": "+10–20%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "welcome",
+   "title": "Put your 4.8 ★ where people decide",
+   "what": "Your first screen carries “Globally trusted reporting since 1888” but no reader proof, and neither does the plans screen. Your 4.8 ★ from 24,000+ App Store ratings belongs under that line and next to Subscribe Now.",
+   "impact": "+10–15%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "paywall",
+   "title": "Show both plans, and the annual saving in money",
+   "what": "Today the plans are a four-card carousel, one plan per card, opening on Monthly with “SAVE 20%” on a toggle. Show Standard and Premium together on Annual: $429 a year is $35.75 a month, $111 less than twelve months at $45.",
+   "impact": "+10–15%",
+   "il": "ARPU (annual mix) · CR +5–15%"
+  },
+  {
+   "screen": "barrier",
+   "title": "Sell the story they tapped, and the $1 month plainly",
+   "what": "The barrier on a story reads “Unlock access to leading journalism for $1”, with $75 a month in one line below it. Keep the story in view, say “Finish this story”, and lay the month out as a timeline: $1 today, $75 a month after, cancel anytime. Fewer surprise renewals means fewer refunds.",
+   "impact": "+5–10%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "offer",
+   "title": "Offer FT Edit to people who close the plans",
+   "what": "FT Edit ($4.99 a month, 8 stories a day hand-picked by senior editors) is currently the first card in the plans carousel, before Standard and Premium. Move it to the moment someone closes the plans, as the lighter way in. No discount, no timer.",
+   "impact": "+5–10%",
+   "il": "CR among people who close"
+  }
+ ],
+ "panel": {
+  "welcome": {
+   "idea": 2,
+   "t": "Put your 4.8 ★ where people decide",
+   "why": "<b>Try<\/b> “4.8 ★ · 24K ratings” under “Globally trusted reporting since 1888”, <b>because<\/b> this is your first Subscribe button, and heritage says who you are while 24,000 App Store ratings say what readers think.",
+   "iv": "CR +10–15%",
+   "il": "to purchase",
+   "also": "The same line sits next to Subscribe Now on the plans screen."
+  },
+  "industry": {
+   "idea": 0,
+   "t": "One question, before the paywall",
+   "why": "Your own “Tell us about you” screen, moved ahead of sign-up and cut from four dropdowns to the one answer the next screens use."
+  },
+  "myft": {
+   "idea": 1,
+   "t": "Use the profile answers you already collect",
+   "why": "<b>Try<\/b> answering the industry question straight away with the myFT topics it adds and a story from them, <b>because<\/b> today the profile comes after sign-up and nothing before the paywall uses it.",
+   "iv": "CR +10–20%",
+   "il": "to purchase",
+   "also": "The plans headline names the same industry."
+  },
+  "barrier": {
+   "idea": 4,
+   "t": "Sell the story they tapped, and the $1 month plainly",
+   "why": "<b>Try<\/b> “Finish this story for $1” with the $1 month laid out as a timeline, <b>because<\/b> this is the moment someone wants this article, and a $75 renewal they didn’t expect becomes a cancellation or a refund request.",
+   "iv": "CR +5–10%",
+   "il": "to purchase",
+   "also": "Keeps the store-billed base cleaner: fewer surprise renewals, fewer refunds."
+  },
+  "paywall": {
+   "idea": 3,
+   "t": "Show both plans, and the annual saving in money",
+   "why": "<b>Try<\/b> Standard and Premium together with Annual selected and the saving in money ($35.75 a month, $111 less than monthly), <b>because<\/b> today one plan per card across a four-card carousel opens on Monthly.",
+   "iv": "ARPU +10–15%",
+   "il": "annual mix · CR +5–15%",
+   "also": "Idea 1: the headline names their industry. Idea 2: the rating sits by the button."
+  },
+  "offer": {
+   "idea": 5,
+   "t": "Offer FT Edit to people who close the plans",
+   "why": "<b>Try<\/b> FT Edit at $4.99 a month when someone closes the plans, <b>because<\/b> today it is the first card people see, ahead of your $45 and $75 plans, and closing ends the conversation.",
+   "iv": "+5–10%",
+   "il": "CR among people who close",
+   "also": "A real second product, not a discount: no countdown, no strikethrough."
+  }
+ },
+ "langs": [
+  {
+   "code": "en",
+   "name": "English · US prices"
+  },
+  {
+   "code": "fr",
+   "name": "Français · prix France"
+  }
+ ],
+ "i18n": {
+  "fr": {
+   "wl_h": "Penser sans crainte",
+   "wl_sub": "Un journalisme reconnu dans le monde entier depuis 1888",
+   "wl_proof": "4,8 · 3 033 notes sur l’App Store",
+   "wl_cta": "Abonnez-vous dès {trial}",
+   "wl_sign": "Se connecter",
+   "wl_not": "Plus tard",
+   "in_top": "Complétez votre profil",
+   "in_h": "Parlez-nous de vous",
+   "in_sub": "Cela nous aide à personnaliser votre expérience du FT et à la rendre la plus utile possible.",
+   "in_q": "Dans quel secteur travaillez-vous ?",
+   "in_o1": "Banque",
+   "in_o2": "Marchés de capitaux",
+   "in_o3": "Ressources de base / mines",
+   "in_o4": "Autre",
+   "in_note": "Année de naissance, fonction et poste peuvent attendre la création de votre compte.",
+   "in_cta": "Commencer à lire",
+   "mf_ban": "Abonnez-vous pour tout lire",
+   "mf_opt": "Voir les offres",
+   "mf_tabs": "<span>Fil<\/span><span>Enregistrés<\/span><span>Sujets<\/span><span>Portefeuille<\/span><span>Historique<\/span><span>Newsletters<\/span>",
+   "mf_done": "D’après <b><span data-bind=\"label:ind\"><\/span><\/b>, nous avons ajouté 3 sujets à votre myFT.",
+   "mf_follow": "Sujets suivis",
+   "mf_added": "Ajouté",
+   "mf_latest": "Derniers articles de vos sujets",
+   "tb_home": "Accueil",
+   "tb_search": "Recherche",
+   "br_home": "Accueil",
+   "br_listen": "Écouter cet article",
+   "br_min": "7 min d’écoute",
+   "br_h": "Terminez cet article pour {trial}",
+   "br_t1h": "Aujourd’hui",
+   "br_t1": "Accès complet aux contenus Standard et Premium pour {trial}",
+   "br_t2h": "Dans 1 mois",
+   "br_t2": "{pmo} par mois pour Premium Digital, sauf résiliation",
+   "br_t3h": "À tout moment",
+   "br_t3": "Résiliez quand vous voulez depuis vos abonnements App Store",
+   "br_cta": "Commencer mon essai à {trial}",
+   "br_more": "Autres offres",
+   "br_org": "Vérifiez si vous pouvez obtenir un <span class=\"f-u\">accès gratuit via votre organisation.<\/span>",
+   "pw_h": "Une longueur d’avance",
+   "pw_top": "Pour continuer à lire, abonnez-vous ou, si vous avez un compte, <span class=\"f-u\">connectez-vous<\/span>",
+   "pw_mo": "Mensuel",
+   "pw_yr": "Annuel",
+   "pw_save": "−20 %",
+   "pw_syr": "<b>{syr}<\/b> par an",
+   "pw_seq": "(Soit {symo} par mois)",
+   "pw_ssv": "{ssave} de moins qu’en mensuel",
+   "pw_smo": "<b>{smo}<\/b> par mois",
+   "pw_auto": "Renouvellement mensuel automatique",
+   "pw_pyr": "<b>{pyr}<\/b> par an",
+   "pw_peq": "(Soit {pymo} par mois)",
+   "pw_psv": "{psave} de moins qu’en mensuel",
+   "pw_pmo": "<b>{pmo}<\/b> par mois",
+   "pw_s1": "L’actualité et l’analyse mondiales",
+   "pw_s2": "L’éclairage de nos experts",
+   "pw_s3": "Plus de 20 newsletters sélectionnées",
+   "pw_s4": "Le briefing FirstFT",
+   "pw_p0": "Tous les avantages de Standard, plus :",
+   "pw_p1": "Lex : la chronique d’investissement phare du FT",
+   "pw_p2": "Plus de 15 newsletters Premium d’experts reconnus",
+   "pw_p3": "FT Digital Edition : notre édition imprimée numérisée",
+   "pw_proof": "4,8 · 3 033 notes sur l’App Store",
+   "pw_cta": "S’abonner",
+   "pw_terms": "<span class=\"f-u\">Conditions générales<\/span> applicables",
+   "of_h": "Pas encore prêt pour tout le FT ?",
+   "of_s": "Commencez par FT Edit : une sélection quotidienne du FT.",
+   "of_pr": "<b>{emo}<\/b> par mois",
+   "of_b1": "8 articles par jour, choisis par nos rédacteurs en chef",
+   "of_b2": "La newsletter FT Edit dans votre boîte mail",
+   "of_b3": "Un espace de lecture FT Edit dédié dans l’app",
+   "of_yr": "Ou {eyr} par an (soit {eymo} par mois). Renouvellement automatique, résiliable à tout moment."
+  }
+ },
+ "prices": {
+  "fr": {
+   "trial": "1 €",
+   "pmo": "69,00 €",
+   "smo": "45,00 €",
+   "syr": "429,00 €",
+   "symo": "35,75 €",
+   "ssave": "111,00 €",
+   "pyr": "659,00 €",
+   "pymo": "54,92 €",
+   "psave": "169,00 €",
+   "emo": "5,49 €",
+   "eyr": "54,00 €",
+   "eymo": "4,50 €"
+  }
+ },
+ "labelsI18n": {
+  "fr": {
+   "ind": {
+    "bank": "Banque",
+    "cap": "Marchés de capitaux",
+    "mine": "Ressources de base / mines",
+    "oth": "votre secteur"
+   }
+  }
+ },
+ "liveUrl": "https://eddieatadapty.github.io/financial-times-flow-rebuild/",
+ "video": "assets/walkthrough.mp4",
+ "poster": "assets/walkthrough-poster.jpg",
+ "compare": {
+  "today": "today",
+  "proposed": "paywall",
+  "kicker": "The plans, side by side",
+  "title": "Today and proposed.",
+  "sub": "Same card, same teal, same Subscribe Now. Five things change.",
+  "todayCap": "rebuilt from your recorded iOS flow",
+  "rows": [
+   {
+    "h": "Headline",
+    "idea": 1,
+    "was": "None: “To continue reading please subscribe…”",
+    "now": "“Stay a step ahead in resources and mining.” Names the industry they picked"
+   },
+   {
+    "h": "Plans",
+    "idea": 3,
+    "was": "One plan per card, four-card carousel, opens on Monthly",
+    "now": "Standard and Premium side by side, Annual selected"
+   },
+   {
+    "h": "Saving",
+    "idea": 3,
+    "was": "“SAVE 20%” on the Annual toggle",
+    "now": "$35.75 a month, $111 less than paying monthly"
+   },
+   {
+    "h": "Proof",
+    "idea": 2,
+    "was": "None on the screen",
+    "now": "★ 4.8 · 24K ratings on the App Store, next to the button"
+   },
+   {
+    "h": "On close",
+    "idea": 5,
+    "was": "✕ closes the plans",
+    "now": "FT Edit at $4.99 a month, the lighter way in"
+   }
+  ],
+  "kept": "Kept as they are: your cream card with its offset shadow, serif plan names, teal prices, the Monthly/Annual switch and its SAVE 20% badge, your benefit lines (the top four of each plan), the sign-in line, Subscribe Now and Full Terms and Conditions."
+ },
+ "tour": {
+  "introLede": "Five ideas for the FT app’s path to an App Store subscription, built into your own screens.",
+  "endTitle": "Five ideas, built into your own app.",
+  "segments": [
+   {
+    "id": "welcome",
+    "d": 4000,
+    "reveal": ".f-wl-proof",
+    "tap": [
+     ".f-wl-not",
+     3350
+    ]
+   },
+   {
+    "id": "industry",
+    "d": 2100,
+    "st": {
+     "ind": null
+    },
+    "tap": [
+     "[data-pick=\"ind:mine\"]",
+     1500
+    ]
+   },
+   {
+    "id": "industry",
+    "d": 1300,
+    "st": {
+     "ind": "mine"
+    },
+    "tap": [
+     ".f-in-go",
+     850
+    ]
+   },
+   {
+    "id": "myft",
+    "d": 4300,
+    "st": {
+     "ind": "mine"
+    },
+    "pop": ".f-done",
+    "tap": [
+     "[data-show=\"ind:mine\"] .f-story",
+     3700
+    ]
+   },
+   {
+    "id": "barrier",
+    "d": 4300,
+    "reveal": ".f-tl",
+    "tap": [
+     ".br-more",
+     3700
+    ]
+   },
+   {
+    "id": "paywall",
+    "d": 3000,
+    "st": {
+     "per": "yr",
+     "plan": "std"
+    },
+    "tap": [
+     "[data-pick=\"plan:prem\"]",
+     2450
+    ]
+   },
+   {
+    "id": "paywall",
+    "d": 1900,
+    "st": {
+     "plan": "prem"
+    },
+    "tap": [
+     ".f-x",
+     1350
+    ]
+   },
+   {
+    "id": "offer",
+    "d": 3800
+   },
+   {
+    "id": "offer",
+    "d": 4600,
+    "end": true
+   }
+  ],
+  "captions": {
+   "welcome": {
+    "n": 2,
+    "t": "Your 4.8 ★, where people decide",
+    "l": "24K App Store ratings under your first Subscribe button.",
+    "o": "CR +10–15%",
+    "ol": "to purchase"
+   },
+   "industry": {
+    "k": "Context",
+    "t": "One question, before the paywall",
+    "l": "Your own industry question, moved ahead of sign-up."
+   },
+   "myft": {
+    "n": 1,
+    "t": "Use the answers you collect",
+    "l": "The industry becomes myFT topics and a story to read.",
+    "o": "CR +10–20%",
+    "ol": "to purchase"
+   },
+   "barrier": {
+    "n": 4,
+    "t": "Sell the story they tapped",
+    "l": "“Finish this story”, and the $1 month as a timeline.",
+    "o": "CR +5–10%",
+    "ol": "to purchase"
+   },
+   "paywall": {
+    "n": 3,
+    "t": "Both plans, the saving in money",
+    "l": "$429 a year is $35.75 a month: $111 less than monthly.",
+    "o": "ARPU +10–15%",
+    "ol": "annual mix"
+   },
+   "offer": {
+    "n": 5,
+    "t": "FT Edit for people who close",
+    "l": "$4.99 a month for 8 stories a day. No timer, no discount.",
+    "o": "+5–10%",
+    "ol": "CR among people who close"
+   }
+  }
+ },
+ "grounding": "Impact ranges are Adapty’s expected effect from teardowns and A/B tests across 30,000+ subscription apps, not measured lift for Financial Times. They overlap, so they don’t add up.",
+ "sources": [
+  {
+   "group": "Prices",
+   "items": [
+    {
+     "dt": "$45 / $429 Standard Digital · $75 / $719 Premium Digital",
+     "dd": "In-App Purchases on your <a href=\"https://apps.apple.com/us/app/financial-times-business-news/id1200842933\" target=\"_blank\" rel=\"noopener\">US App Store listing<\/a>, and the same prices on your plans carousel in the recorded iOS flow."
+    },
+    {
+     "dt": "$35.75 and $59.92 a month · $111 and $181 saved",
+     "dd": "The monthly equivalents are your own “Equivalent of” lines. The savings are 12 × the monthly price minus the annual price ($540 − $429; $900 − $719)."
+    },
+    {
+     "dt": "$1 for 1 month, then $75 a month",
+     "dd": "Your story barrier and the Special Offer card in the recorded flow (renews to Premium Digital)."
+    },
+    {
+     "dt": "FT Edit $4.99 a month · $49 a year",
+     "dd": "US In-App Purchases and your FT Edit plan card ($4.08 a month is your own equivalent line)."
+    },
+    {
+     "dt": "France: 45,00 € / 429,00 € · 69,00 € / 659,00 € · FT Edit 5,49 € / 54,00 €",
+     "dd": "In-App Purchases on the <a href=\"https://apps.apple.com/fr/app/financial-times-business-news/id1200842933\" target=\"_blank\" rel=\"noopener\">French App Store listing<\/a>. 35,75 €, 54,92 € and 4,50 € a month and the 111,00 € / 169,00 € savings are computed from them."
+    },
+    {
+     "dt": "Not used",
+     "dd": "UK prices (£39 / £369 Standard, £59 / £569 Premium) and other storefronts; the prototype shows US and France only."
+    }
+   ]
+  },
+  {
+   "group": "Proof",
+   "items": [
+    {
+     "dt": "4.8 ★ · 24,447 ratings",
+     "dd": "US App Store listing, 15 October 2026 (shown as “24K”)."
+    },
+    {
+     "dt": "4,8 ★ · 3 033 notes",
+     "dd": "French App Store listing (4.79), used in the French version. France is the largest single-language non-English storefront by rating count (3,033, ahead of Germany’s 2,861)."
+    },
+    {
+     "dt": "“Globally trusted reporting since 1888”",
+     "dd": "Your welcome screen, verbatim."
+    }
+   ]
+  },
+  {
+   "group": "Features and copy",
+   "items": [
+    {
+     "dt": "Screens and copy",
+     "dd": "Welcome, profile, myFT, story barrier, plan cards and FT Edit copy are verbatim from your iOS app as recorded by ScreensDesign (April 2026)."
+    },
+    {
+     "dt": "Industries, topics and stories",
+     "dd": "Industry options from your profile dropdown; topic names and the four stories from your myFT and home feeds in the same recording. Which topics each industry adds is our suggestion."
+    },
+    {
+     "dt": "French copy",
+     "dd": "Our translation of the app’s interface. FT stories and topic names stay in English."
+    }
+   ]
+  },
+  {
+   "group": "Design",
+   "items": [
+    {
+     "dt": "Colours",
+     "dd": "Sampled from your in-app screens (paper #fdede1, teal #187373, plan card #fefbfa on #fdf8f4); claret #990f3d and secondary grey from ft.com."
+    },
+    {
+     "dt": "Type",
+     "dd": "Your Financier Display and Metric are licensed; the prototype uses Source Serif 4 and Figtree, the closest Google families."
+    },
+    {
+     "dt": "Art",
+     "dd": "The welcome texture, the FT logo lock-up and the FT Edit cards are cut from your own recorded screens; nothing is stock."
+    }
+   ]
+  },
+  {
+   "group": "What we couldn’t see",
+   "items": [
+    {
+     "dt": "Your data",
+     "dd": "Your test history and conversion data. The flow was recorded in April 2026 and may have changed since."
+    },
+    {
+     "dt": "The French intro offer",
+     "dd": "Introductory prices aren’t listed publicly. “1 €” in the French version assumes the US $1 offer runs there too."
+    },
+    {
+     "dt": "Scope",
+     "dd": "Only the in-app path billed through the App Store. Your web subscription funnel and billing are out of scope and unchanged."
+    }
+   ]
+  }
+ ]
+}
+</script>
+
+<script>
+/* FT hooks: the plans headline names the industry picked on the profile screen; the profile starts fresh each visit */
+var FT_IND = {en: {bank: 'in banking', cap: 'in capital markets', mine: 'in resources and mining', oth: 'in your industry'},
+              fr: {bank: 'dans la banque', cap: 'sur les marchés de capitaux', mine: 'dans les ressources et les mines', oth: 'dans votre secteur'}};
+window.onSync = function(S){
+  var m = FT_IND[S.lang] || FT_IND.en;
+  document.querySelectorAll('.f-pw-ind').forEach(function(e){ e.textContent = m[S.ind] || m.oth; });
+};
+window.onEnter = function(id, S){
+  if (id === 'industry' && !SHOT && !HERO) { S.ind = null; sync(); }
+  if ((id === 'myft' || id === 'barrier' || id === 'paywall') && !S.ind) { S.ind = 'mine'; sync(); }
+};
+</script>
+<script>
+/* ============ engine — generic, do not fork per app ============ */
+var C = JSON.parse(document.getElementById('content').textContent);
+var S = C.state, scr = {}, ORDER = [], hist = [], cur = null, Q = location.search;
+var SHOT = /[?&](shot|phone|tour)\b/.test(Q), HERO = /[?&]hero\b/.test(Q);
+/* a screen with data-aside (e.g. the paywall TODAY for the side-by-side) renders for stills but is not part of the flow */
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id] = s; if (!s.hasAttribute('data-aside')) ORDER.push(s.dataset.id); });
+if (/[?&]shot\b/.test(Q)) document.documentElement.classList.add('shot');
+if (/[?&]phone\b/.test(Q)) document.documentElement.classList.add('shot', 'phoneonly');
+if (/[?&]clear\b/.test(Q)) document.documentElement.classList.add('clear');
+var IDEAS = (C.ideas || []).length;
+
+/* ---- languages: markup is the first language; C.i18n[lang][data-t key] the others; {tokens} from C.prices[lang] ---- */
+var LANGS = C.langs || [], BASE = LANGS.length ? LANGS[0].code : 'en', LANG_DONE = BASE, BASE_LABELS = JSON.parse(JSON.stringify(C.labels || {}));
+if (!S.lang) S.lang = BASE;
+function fillP(s, l){ var P = (C.prices || {})[l] || {}; return String(s).replace(/\{(\w+)\}/g, function(m, k){ return k in P ? P[k] : m; }); }
+function applyLang(){
+  var l = S.lang || BASE; if (l === LANG_DONE) return;
+  var T = (C.i18n || {})[l] || {};
+  document.querySelectorAll('.phone [data-t]').forEach(function(el){
+    if (el._base == null) el._base = el.innerHTML;
+    el.innerHTML = l === BASE || T[el.dataset.t] == null ? el._base : fillP(T[el.dataset.t], l);
+  });
+  C.labels = JSON.parse(JSON.stringify(BASE_LABELS));
+  var LL = (C.labelsI18n || {})[l] || {}; Object.keys(LL).forEach(function(k){ C.labels[k] = LL[k]; });
+  LANG_DONE = l;
+}
+function setLang(l){
+  if (!LANGS.some(function(x){ return x.code === l; })) return;
+  S.lang = l; sync();
+  document.querySelectorAll('[data-setlang]').forEach(function(b){ b.classList.toggle('on', b.dataset.setlang === l); });
+  if (window.onLang) window.onLang(l);
+}
+
+function lab(key){ var v = S[key]; var L = C.labels[key]; if (Array.isArray(v)) return v.map(function(x){ return L && L[x] || x; }).join(', '); return (L && L[v]) || v; }
+function sync(){
+  applyLang();
+  document.querySelectorAll('[data-bind]').forEach(function(el){
+    var b = el.dataset.bind, m = b.split(':');
+    el.textContent = m[0] === 'label' ? lab(m[1]) : m[0] === 'count' ? (S[m[1]] || []).length : (S[b] == null ? '' : S[b]);
+  });
+  document.querySelectorAll('[data-pick]').forEach(function(el){ var p = el.dataset.pick.split(':'); el.classList.toggle('on', S[p[0]] === p[1]); });
+  document.querySelectorAll('[data-toggle]').forEach(function(el){ var p = el.dataset.toggle.split(':'); el.classList.toggle('on', (S[p[0]] || []).indexOf(p[1]) > -1); });
+  document.querySelectorAll('[data-requires]').forEach(function(el){ el.disabled = !(S[el.dataset.requires] || []).length; });
+  document.querySelectorAll('[data-show]').forEach(function(el){ var p = el.dataset.show.split(':'); el.style.display = String(S[p[0]]) === p[1] ? '' : 'none'; });
+  if (window.onSync) window.onSync(S);
+}
+function show(id, dir){
+  var from = scr[cur], to = scr[id]; if (!to || id === cur) return;
+  var sheet = to.classList.contains('sheet');
+  if (from){
+    from.classList.remove('is-active');
+    if (sheet) from.classList.add('under');                                   /* a sheet slides up over the screen that opened it */
+    else if (dir === 'fwd' && !from.classList.contains('sheet')) from.classList.add('is-past');
+  }
+  if (!sheet) Object.keys(scr).forEach(function(k){ var u = scr[k]; if (u !== to && u.classList.contains('under')) { u.classList.remove('under'); if (dir === 'fwd') u.classList.add('is-past'); } });
+  to.classList.remove('is-past', 'under'); to.classList.add('is-active'); cur = id;
+  paint(); if (window.onEnter) window.onEnter(id, S);
+}
+function go(id){ if (cur) hist.push(cur); show(id, 'fwd'); }
+function back(){ if (hist.length) { var p = hist.pop(); scr[cur].classList.remove('is-active'); show(p, 'back'); } }
+function jump(id){
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active', 'is-past', 'under'); });
+  var i = ORDER.indexOf(id); hist = ORDER.slice(0, i < 0 ? 0 : i); cur = null;
+  ORDER.slice(0, i).forEach(function(k){ if (!scr[k].classList.contains('sheet')) scr[k].classList.add('is-past'); });
+  if (scr[id] && scr[id].classList.contains('sheet')) {                        /* jumping to a sheet: its opener stays visible under it */
+    for (var j = i - 1; j >= 0; j--) if (!scr[ORDER[j]].classList.contains('sheet')) { scr[ORDER[j]].classList.remove('is-past'); scr[ORDER[j]].classList.add('under'); break; }
+  }
+  show(id, 'jump');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+}
+function stepBy(d){ var i = ORDER.indexOf(cur) + d; if (i >= 0 && i < ORDER.length) jump(ORDER[i]); }
+function jumpTo(id){
+  var p = document.getElementById('prototype');
+  if (p && !document.documentElement.classList.contains('appmode')) p.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  jump(id);
+}
+function paint(){
+  sync();
+  var c = document.getElementById('chips');
+  if (!c.childElementCount) ORDER.forEach(function(id){
+    var p = C.panel[id] || {}, b = document.createElement('button');
+    b.className = 'au-chip'; b.type = 'button'; b.dataset.id = id; b.setAttribute('role', 'tab');
+    b.innerHTML = (p.idea ? '<i>' + p.idea + '</i>' : '') + ((C.chips && C.chips[id]) || id);
+    b.onclick = function(){ jump(id); };
+    c.appendChild(b);
+  });
+  c.querySelectorAll('.au-chip').forEach(function(b){ var on = b.dataset.id === cur; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  var d = C.panel[cur] || {t: cur, why: ''}, n = ORDER.indexOf(cur) + 1;
+  document.getElementById('panel').innerHTML =
+    (d.idea ? '<div class="au-pn-k"><i></i>Idea ' + d.idea + ' of ' + IDEAS + '</div>' : '<div class="au-pn-k au-ctx"><i></i>Context</div>') +
+    '<h3 class="au-pn-t">' + d.t + '</h3><p class="au-pn-h">' + d.why + '</p>' +
+    (d.iv ? '<div class="au-pn-o"><div class="au-lab">Potential outcome · based on Adapty data</div><div class="au-val"><mark>' + d.iv + '</mark></div><div class="au-sub">' + (d.il || '') + '</div></div>' : '') +
+    (d.also ? '<p class="au-pn-a">' + d.also + '</p>' : '') +
+    '<div class="au-pn-nav"><button type="button" onclick="stepBy(-1)"' + (n <= 1 ? ' disabled' : '') + '>‹ Previous</button><span>Screen ' + n + ' of ' + ORDER.length + '</span><button type="button" onclick="stepBy(1)"' + (n === ORDER.length ? ' disabled' : '') + '>Next ›</button></div>';
+  var ab = document.getElementById('abT'); if (ab) ab.textContent = (d.idea ? 'Idea ' + d.idea + ' of ' + IDEAS + ' · ' : '') + (d.t || '');
+}
+document.addEventListener('click', function(e){
+  var j = e.target.closest('[data-jumpto]'); if (j){ e.preventDefault(); jumpTo(j.dataset.jumpto); return; }
+  var L = e.target.closest('[data-setlang]'); if (L){ setLang(L.dataset.setlang); return; }
+  if (e.target.closest('[data-langtoggle]') && LANGS.length > 1){ var k = LANGS.findIndex(function(x){ return x.code === S.lang; }); setLang(LANGS[(k + 1) % LANGS.length].code); return; }
+  var el = e.target.closest('[data-go],[data-back],[data-pick],[data-toggle]'); if (!el) return;
+  if (el.dataset.pick){ var p = el.dataset.pick.split(':'); S[p[0]] = p[1]; sync(); if (el.dataset.advance) setTimeout(function(){ go(el.dataset.advance); }, 170); return; }
+  if (el.dataset.toggle){ var q = el.dataset.toggle.split(':'), a = S[q[0]] = S[q[0]] || [], i = a.indexOf(q[1]); if (i > -1) a.splice(i, 1); else a.push(q[1]); sync(); return; }
+  if ('back' in el.dataset) return back();
+  go(el.dataset.go);
+});
+document.querySelectorAll('[data-input]').forEach(function(inp){
+  inp.value = S[inp.dataset.input] || ''; inp.addEventListener('input', function(){ S[inp.dataset.input] = inp.value.trim() || 'there'; sync(); });
+});
+function $(id){ return document.getElementById(id); }
+
+/* hero stills, shortlist, outcome, sources — from CONTENT */
+$('heroPhones').innerHTML = (C.hero || []).map(function(id, i){
+  var pos = ['l', 'c', 'r'][i] || 'r', t = (C.chips && C.chips[id]) || id;
+  return '<button class="au-hp au-' + pos + '" data-jumpto="' + id + '" aria-label="Open ' + t + '"><img src="assets/hero/' + id + '.png" alt=""></button>';
+}).join('');
+$('ideaList').innerHTML = (C.ideas || []).map(function(r, i){
+  return '<article class="au-idea"><div class="au-num">0' + (i + 1) + '</div><div><h3>' + r.title + '</h3><p>' + r.what + '</p>' +
+    '<button type="button" class="au-lnk" data-jumpto="' + r.screen + '">See it on the screen</button></div>' +
+    '<div class="au-imp"><div class="au-v"><mark>' + r.impact + '</mark></div><div class="au-l">' + r.il + '</div></div></article>';
+}).join('');
+var O = C.outcome || {};
+$('bandNums').innerHTML =
+  (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') +
+  (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '');
+$('bandFn').textContent = C.grounding;
+$('fine').textContent = C.grounding + ' Prepared by Adapty.';
+$('srcBody').innerHTML = C.sources.map(function(g){
+  return '<div><h4>' + g.group + '</h4><dl>' + g.items.map(function(it){ return '<dt>' + it.dt + '</dt><dd>' + it.dd + '</dd>'; }).join('') + '</dl></div>';
+}).join('');
+function openSrc(){ var d = $('srcDetails'); d.open = true; d.scrollIntoView({block: 'start'}); }
+
+/* ---- extras: language control, the paywall side by side, QR / phone view, the video ---- */
+if (LANGS.length > 1) {
+  $('langRow').hidden = false;
+  var lb = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.name + '</button>'; }).join('');
+  $('langSw').innerHTML = lb;
+  $('abLang').innerHTML = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.code.toUpperCase() + '</button>'; }).join('');
+}
+var CM = C.compare;
+if (CM && scr[CM.today] && scr[CM.proposed]) {
+  $('compare').hidden = false; $('navCompare').hidden = false;
+  $('cmpBody').innerHTML = '<div class="au-ideas-h"><p class="au-kicker">' + (CM.kicker || 'The paywall, side by side') + '</p><h2 class="au-h2">' + (CM.title || 'Today and proposed.') + (CM.sub ? ' <span>' + CM.sub + '</span>' : '') + '</h2></div>' +
+    '<div class="au-cmp"><figure><img src="assets/hero/' + CM.today + '.png" alt="Your paywall today"><figcaption>Today <span>· ' + (CM.todayCap || 'rebuilt from your recording') + '</span></figcaption></figure>' +
+    '<ol class="au-chg">' + (CM.rows || []).map(function(r){
+      return '<li><h4>' + r.h + (r.idea ? ' <i>Idea ' + r.idea + '</i>' : '') + '</h4><span class="au-was"><em>Today</em>' + r.was + '</span><span class="au-now"><em>Proposed</em>' + r.now + '</span></li>';
+    }).join('') + '</ol>' +
+    '<figure><button type="button" class="au-cmp-go" data-jumpto="' + CM.proposed + '" aria-label="Open the proposed paywall"><img src="assets/hero/' + CM.proposed + '.png" alt="The proposed paywall"></button><figcaption>Proposed <span>· tap to try it</span></figcaption></figure></div>' +
+    (CM.kept ? '<p class="au-kept">' + CM.kept + '</p>' : '');
+}
+if (C.liveUrl) { $('qrCard').hidden = false; $('qrMob').hidden = false; }
+if (/[?&]app\b/.test(Q)) {
+  var H0 = document.documentElement; H0.classList.add('appmode');
+  var openP = function(o){ H0.classList.toggle('au-open', o); $('abWhy').querySelector('em').textContent = o ? 'Close ↓' : 'Why ↑'; };
+  $('abWhy').onclick = function(){ openP(!H0.classList.contains('au-open')); };
+  $('abScrim').onclick = function(){ openP(false); };
+}
+if (C.video) {
+  var dlg = $('vid'), vel = $('vidEl'); vel.src = C.video; if (C.poster) vel.poster = C.poster; $('vidDl').href = C.video;
+  $('heroVideo').hidden = false;
+  $('heroVideo').onclick = function(){ dlg.showModal(); vel.play().catch(function(){}); };
+  $('vidX').onclick = function(){ dlg.close(); };
+  dlg.addEventListener('close', function(){ vel.pause(); });
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+}
+
+/* ---- ?tour: a deterministic walkthrough from C.tour — tourAt(ms) paints one frame; record-video.sh records it ---- */
+function tourInit(){
+  var T = C.tour, H = document.documentElement, TR = T.transition || 360;
+  H.classList.add('tourmode', 'shot'); document.body.classList.add('nofx');
+  var SEG = T.segments, START = [], STATE = [], UNDER = [], acc = 0, st = JSON.parse(JSON.stringify(C.state));
+  SEG.forEach(function(s, i){
+    START.push(acc); acc += s.d;
+    Object.keys(s.st || {}).forEach(function(k){ st[k] = s.st[k]; }); STATE.push(JSON.parse(JSON.stringify(st)));
+    var u = null; if (scr[s.id].classList.contains('sheet')) for (var j = i - 1; j >= 0; j--) if (!scr[SEG[j].id].classList.contains('sheet')) { u = SEG[j].id; break; }
+    UNDER.push(u);
+  });
+  var TOTAL = acc, capEl = $('tCap'), tap = $('tTap'), pressed = null, popped = [];
+  $('tIntro').innerHTML = '<p class="au-eyebrow"><i></i>' + document.querySelector('.au-top-hero .au-eyebrow').textContent + '</p><h1 class="au-display">' + C.app + '</h1>' +
+    '<p class="au-lede">' + (T.introLede || document.querySelector('.au-top-hero .au-lede').innerHTML) + '</p>';
+  $('tEnd').innerHTML = '<p class="au-eyebrow"><i></i>Growth Audit · ' + C.app + '</p><h2 class="au-te-h">' + (T.endTitle || 'Five ideas, built into your own onboarding.') + '</h2>' +
+    '<div class="au-te-n">' + (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') + (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '') + '</div>' +
+    (C.liveUrl ? '<div class="au-te-q"><img src="assets/qr-app.png" alt=""><div><b>Try it on your phone</b><span>' + C.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') + '</span></div></div>' : '') +
+    '<p class="au-te-f">' + C.grounding + '</p>';
+  function ease(x){ return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function easeBack(x){ var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
+  function capHTML(c){
+    c = c || {k: '', t: '', l: ''};
+    return '<div class="au-tk' + (c.n ? '' : ' au-ctx') + '"><i></i>' + (c.n ? 'Idea ' + c.n + ' of ' + IDEAS : (c.k || 'Context')) + '</div><h2 class="au-tt">' + c.t + '</h2><p class="au-tl">' + (c.l || '') + '</p>' +
+      (c.o ? '<div class="au-to"><small>Potential outcome · based on Adapty data</small><b><mark>' + c.o + '</mark></b><span>' + (c.ol || '') + '</span></div>' : '');
+  }
+  function place(id, tf, z){ scr[id].style.transform = tf; scr[id].style.zIndex = z; }
+  window.TOUR_MS = TOTAL;
+  window.tourAt = function(ms){
+    ms = Math.max(0, Math.min(TOTAL - 1, ms));
+    var i = 0; while (i < SEG.length - 1 && ms >= START[i + 1]) i++;
+    var s = SEG[i], local = ms - START[i], prev = i > 0 ? SEG[i - 1] : null;
+    Object.keys(STATE[i]).forEach(function(k){ S[k] = STATE[i][k]; }); sync();
+    var moving = prev && prev.id !== s.id && local < TR, p = moving ? ease(local / TR) : 1;
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('is-active', 'is-past', 'under'); place(k, 'translateX(100%)', 0); });
+    var B = scr[s.id];
+    if (moving) {
+      if (B.classList.contains('sheet')) { place(prev.id, 'none', 1); B.style.transform = 'translateY(' + (1 - p) * 100 + '%)'; }
+      else {
+        var slide = 'translateX(' + (-28 * p) + '%)'; place(prev.id, slide, 1); B.style.transform = 'translateX(' + (1 - p) * 100 + '%)';
+        if (UNDER[i - 1]) place(UNDER[i - 1], slide, 0);
+      }
+    } else B.style.transform = 'none';
+    B.style.zIndex = 2;
+    if (UNDER[i] && !moving) place(UNDER[i], 'none', 1);
+    /* optional reveal: s.pop scales an element in, s.reveal fades one in a beat later */
+    popped.forEach(function(e){ e.style.transform = ''; e.style.opacity = ''; }); popped = [];
+    var q = Math.max(0, Math.min(1, (local - 250) / 550));
+    if (s.pop) { var pe = B.querySelector(s.pop); if (pe) { pe.style.transform = 'scale(' + (.55 + .45 * easeBack(q)) + ')'; pe.style.opacity = Math.min(1, q * 1.6); popped.push(pe); } }
+    if (s.reveal) { var re = B.querySelector(s.reveal); if (re) { re.style.opacity = Math.max(0, Math.min(1, (local - 520) / 300)); popped.push(re); } }
+    /* caption crossfades at screen changes; waits for the intro, gives way to the end card */
+    var key = s.id, op = 1;
+    if (moving) { if (p < .5) { key = prev.id; op = 1 - p * 2; } else op = p * 2 - 1; }
+    if (capEl.dataset.k !== key) { capEl.innerHTML = capHTML(T.captions[key]); capEl.dataset.k = key; }
+    var io = ms < 1100 ? 1 : Math.max(0, 1 - (ms - 1100) / 300), eo = s.end ? Math.min(1, local / 350) : 0;
+    capEl.style.opacity = op * Math.max(0, Math.min(1, (ms - 1400) / 300)) * (1 - eo);
+    /* the finger: fades in, taps, ripples out. Selectors are scoped to the screen */
+    tap.style.opacity = 0; if (pressed) { pressed.style.opacity = ''; pressed = null; }
+    if (s.tap) {
+      var el = B.querySelector(s.tap[0]), dt = local - s.tap[1];
+      if (el && dt > -260 && dt < 420) {
+        var r = el.getBoundingClientRect();
+        tap.style.left = (r.left + r.width / 2) + 'px'; tap.style.top = (r.top + r.height / 2) + 'px';
+        if (dt < 0) { tap.style.opacity = (dt + 260) / 260 * .9; tap.style.transform = 'scale(1)'; }
+        else { tap.style.opacity = .9 * (1 - dt / 420); tap.style.transform = 'scale(' + (1 + dt / 420 * .9) + ')'; }
+        if (dt >= 0 && dt < 160) { el.style.opacity = .72; pressed = el; }
+      }
+    }
+    $('tIntro').style.opacity = T.intro === false ? 0 : io;
+    $('tEnd').style.opacity = eo;
+    $('tProg').style.width = (ms / TOTAL * 100) + '%';
+    cur = s.id;
+    return i;
+  };
+  var tm = /[?&]t=(\d+)/.exec(Q); tourAt(tm ? +tm[1] : 0);
+}
+
+/* boot: #<screen-id> deep-links a screen (shoot.sh / hero-stills.sh use it); ?lang=xx picks the language */
+(function(){
+  var lm = /[?&]lang=(\w+)/.exec(Q); if (lm) setLang(lm[1]); else setLang(S.lang);
+  var h = location.hash.slice(1);
+  jump(scr[h] ? h : ORDER[0]);
+  if (scr[h] && !SHOT && !document.documentElement.classList.contains('appmode')) setTimeout(function(){ $('prototype').scrollIntoView(); }, 0);
+  if (/[?&]tour\b/.test(Q) && C.tour) tourInit();
+})();
+</script>
+</body>
+</html>
